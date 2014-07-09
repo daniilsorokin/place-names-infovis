@@ -29,13 +29,37 @@
     </head>
     <body>
         <table id="page-structure" class="page-structure disable-select">
-            <tr><td id="list-selector-container" class="left-column-element">
+            <tr>
+                <td class="left-column">
+                    <div id="list-selector-container" class="left-column-element" >
                         <div id="list-selector" class="btn-group btn-group-sm">
                             <button id="select-toponyms-btn" type="button" class="btn btn-primary" disabled>Toponyms</button>
                             <button id="select-groups-btn" type="button" class="btn btn-primary" disabled>Groups</button>
                         </div>
+                    </div>
+                    <div id="control-panel-container" class="left-column-element control-panel-container">
+                        <div class="list-control-panel">
+                            <button id="deselect-button" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-ban-circle" disabled></span></button>
+                        </div>
+                    </div>  
+                    <div class="left-column-element list-container">
+                        <div id="toponyms-list-container" class="list-holder">
+                            <div class="nano">
+                                <div class="content">
+                                    <ul id="toponyms-list" class="list disable-select"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="groups-list-container" class="list-holder">
+                            <div class="nano">
+                                <div class="content">
+                                    <ul id="groups-list" class="list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
                 </td>
-                <td rowspan="3">
+                <td>
                     <div id="info-window-container" class="info-window-container">
                         <div id="info-panel" class="panel panel-default">
                             <div class="panel-heading">
@@ -76,34 +100,9 @@
                         </div>
 -->
                     </div>
-                    <div id="map-canvas" style="width:100%; height:100%; margin:0px 0px; padding:0px;"></div>
+                    <div id="map-canvas" style="width:100%; height:100%; margin:0px 0px; padding:0px; z-index: 0"></div>
                 </td>
-            </tr>
-            <tr>
-                <td class="left-column-element control-panel-container">
-                    <div class="list-control-panel">
-                        <button id="deselect-button" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-ban-circle" disabled></span></button>
-                    </div>
-                </td>
-            </tr>    
-            <tr>
-                <td class="left-column-element list-container">
-                    <div id="toponyms-list-container" class="list-holder">
-                        <div class="nano">
-                            <div class="content">
-                                <ul id="toponyms-list" class="list disable-select"></ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="groups-list-container" class="list-holder">
-                        <div class="nano">
-                            <div class="content">
-                                <ul id="groups-list" class="list"></ul>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>    
+            </tr>  
         </table>
     </body>
 </html>

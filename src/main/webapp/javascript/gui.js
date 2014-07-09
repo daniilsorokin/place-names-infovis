@@ -19,7 +19,15 @@ VIZAPP.dataInterface = function () {
                 doWithToponyms(VIZAPP.dummies.toponymObjects);
             } else if (type == "real") {
                 $.getJSON("request/toponymobject/", {}, function(data) {
-                    doWithToponyms(data.toponymObject);
+                    if (data instanceof Array){
+                        doWithToponyms(data);
+                    } else {
+                        var toponyms = data.toponymObject;
+                        if (!(toponyms instanceof Array)){
+                            toponyms = [toponyms]
+                        }
+                        doWithToponyms(toponyms);                    
+                    }
                 });
             }
         },
@@ -28,31 +36,47 @@ VIZAPP.dataInterface = function () {
                 doWithFormants(VIZAPP.dummies.formants);
             } else if (type == "real") {
                 $.getJSON("request/formant/", {}, function(data) {
-                    doWithFormants(data.formant);
+                    if (data instanceof Array){
+                        doWithFormants(data);
+                    } else {
+                        var formants = data.formant;
+                        if (!(formants instanceof Array)){
+                            formants = [formants]
+                        }
+                        doWithFormants(formants);                    
+                    }
                 });
             }
         },
         getToponymsSet: function(ids, doWithResults) {
             $.getJSON("request/toponymobject/set", {id: ids}, function(data) {
-                var toponyms = data.toponymObject;
-                if (!(toponyms instanceof Array)){
-                    toponyms = [toponyms]
+                if (data instanceof Array){
+                    doWithResults(data);
+                } else {
+                    var toponyms = data.toponymObject;
+                    if (!(toponyms instanceof Array)){
+                        toponyms = [toponyms]
+                    }
+                    doWithResults(toponyms);                    
                 }
-                doWithResults(toponyms);
             });
         },
         getToponym: function(id, doWithResults) {
             $.getJSON("request/toponymobject/"+id, function(data) {
                 doWithResults(data);
             });
-        },        
+        },
         getToponymsByFormant: function(id, doWithResults) {
             $.getJSON("request/formant/" + id + "/toponyms", function(data) {
-                var toponyms = data.toponymObject;
-                if (!(toponyms instanceof Array)){
-                    toponyms = [toponyms]
+                if (data instanceof Array){
+                    doWithResults(data);
+                } else {
+                    var toponyms = data.toponymObject;
+                    if (!(toponyms instanceof Array)){
+                        toponyms = [toponyms]
+                    }
+                    doWithResults(toponyms);                    
                 }
-                doWithResults(toponyms);
             });
         },
         getToponymIdsByFormant: function(id, doWithResults) {
@@ -183,13 +207,14 @@ VIZAPP.gui = function () {
         var $infoWindow = $("#info-panel");
         if ($element.hasClass("triggered")){
             trigger($element);
-            $infoWindow.hide("slide", { direction: "left", duration: 200,});
+            $infoWindow.hide("slide", {easing:"easeInExpo", direction: "left", duration: 200,});
         } else {            
             $("td.list-container span.triggered").each(function(){
                 trigger($(this), function(x){ x.fadeTo(100, 0, function(){ $(this).css({visibility: 'hidden', opacity: 1}); }); });
             });
             trigger($element);
             $infoWindow.hide("slide", { 
+                easing:"easeInExpo",
                 direction: "left",
                 duration: 200,
                 complete: function() {
@@ -204,7 +229,8 @@ VIZAPP.gui = function () {
                         $("h4 .title", $infoWindow).html(toponym.name);
                         $("h4 small", $infoWindow).html(toponym.englishTransliteration);
                         $("dd.latlng", $infoWindow).html(toponym.latitude + ", " + toponym.longitude);
-                        $("dd.language", $infoWindow).html(toponym.language.name);
+                        if (toponym.language !== undefined) 
+                            $("dd.language", $infoWindow).html(toponym.language.name);
                         $("dd.type", $infoWindow).html(toponym.type.name);
                         $("dd.group button", $infoWindow).html(toponym.formant.formantName)
                             .off("click")
@@ -236,7 +262,7 @@ VIZAPP.gui = function () {
                     }
                     $infoWindow.offset({top: $element.offset().top - ($infoWindow.height()/2) });
                 }
-            }).show("slide", { direction: "left", duration: 200 });
+            }).show("slide", {easing:"easeOutExpo", direction: "left", duration: 400 });
         }
     }
     
@@ -363,6 +389,10 @@ VIZAPP.gui = function () {
             var $toponymsList = $("#toponyms-list");
             var $groupsList = $("#groups-list");
             $(".list").selectable({filter:"li", cancel:".t-info-trigger,.g-info-trigger"});
+            
+            $("div.list-container").height($("td.left-column").innerHeight() 
+                    - $("#list-selector-container").outerHeight() 
+                    - $("#control-panel-container").outerHeight());
             
             $("#toponyms-list-container").show();
             $("#groups-list-container").hide();

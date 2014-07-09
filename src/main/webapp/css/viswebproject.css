@@ -21,6 +21,8 @@ table.page-structure {
     border-collapse:collapse;
     
     overflow: hidden;
+    z-index: 2;
+    position: absolute;
 }
 
 div.mousescroll {
@@ -72,7 +74,8 @@ div.mousescroll {
 .list .ui-selected { background: #0066CC; color: white; }
 
 .list-container {
-      height   : 100%;
+     min-height: 250px; 
+    /* box-shadow: 5px 0px 2px #888888; */
 }
 
 .list-control-panel {
@@ -82,20 +85,25 @@ div.mousescroll {
     
     text-align:center;
     vertical-align:middle;
-        
 }
 
 .control-panel-container {
-    height: 10px
+    min-height: 10px
 }
 
 .list-holder {
-    height: 100%;
+    height: auto;
     width: auto;
 }
 
-.left-column-element {
+.left-column {
+    vertical-align: top;
     width: 250px;
+
+    /* box-shadow: 5px 0px 2px #888888; */
+    -webkit-box-shadow: 8px 0  6px -6px black;
+	   -moz-box-shadow: 8px 0 6px -6px black;
+	        box-shadow: 8px 0 6px -6px black;
 }
 
 .info-window-container {
@@ -105,7 +113,7 @@ div.mousescroll {
     
     margin: 0px 5px; 
     
-    z-Index: 1;
+    z-index: 2;
     pointer-events:none;
 }
 
@@ -142,6 +150,7 @@ div.mousescroll {
 .small-margins {
     margin: 2px;
 }
+
 /* particular elements (based on id) */
 #deselect-button {
     margin: 3px;
@@ -149,7 +158,7 @@ div.mousescroll {
 }
 
 #list-selector-container { 
-    height: 10px;
+    min-height: 10px;
     text-align: center;
     border-bottom: 1px solid rgb(178, 178, 178);
 }
