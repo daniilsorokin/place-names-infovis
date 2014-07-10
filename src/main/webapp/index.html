@@ -30,34 +30,51 @@
     <body>
         <table id="page-structure" class="page-structure disable-select">
             <tr>
-                <td class="left-column">
-                    <div id="list-selector-container" class="left-column-element" >
-                        <div id="list-selector" class="btn-group btn-group-sm">
-                            <button id="select-toponyms-btn" type="button" class="btn btn-primary" disabled>Toponyms</button>
-                            <button id="select-groups-btn" type="button" class="btn btn-primary" disabled>Groups</button>
-                        </div>
+                <td class="left-column" style="background-color: #d7d7d7; box-shadow: 0 0 4px #aaaaaa inset;">
+                    <div id="dataset-select-panel" class="sliding-panel left-column">
+                        <h3>Select a dataset</h3>
+                        <button id="load-dataset" class="btn btn-default">Load dataset</button>
                     </div>
-                    <div id="control-panel-container" class="left-column-element control-panel-container">
-                        <div class="list-control-panel">
-                            <button id="deselect-button" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-ban-circle" disabled></span></button>
-                        </div>
-                    </div>  
-                    <div class="left-column-element list-container">
-                        <div id="toponyms-list-container" class="list-holder">
-                            <div class="nano">
-                                <div class="content">
-                                    <ul id="toponyms-list" class="list disable-select"></ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="groups-list-container" class="list-holder">
-                            <div class="nano">
-                                <div class="content">
-                                    <ul id="groups-list" class="list"></ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                    
+                    <div id="dataset-work-panel" class="sliding-panel left-column">
+                        <table class="disable-select page-structure">
+                            <tr>
+                                <td class="left-column">
+                                    <div id="list-selector-container" class="left-column-element" >
+                                        <button id="back-to-dataset" class="btn btn-default btn-sm">Back</button>
+                                        <div id="list-selector" class="btn-group btn-group-sm">
+                                            <button id="select-toponyms-btn" type="button" class="btn btn-primary" disabled>Toponyms</button>
+                                            <button id="select-groups-btn" type="button" class="btn btn-primary" disabled>Groups</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="left-column">
+                                    <div class="list-control-panel">
+                                        <button id="deselect-button" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-ban-circle" disabled></span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="left-column list-container">
+                                    <div id="toponyms-list-container" class="list-holder">
+                                        <div class="nano">
+                                            <div class="content">
+                                                <ul id="toponyms-list" class="list disable-select"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="groups-list-container" class="list-holder">
+                                        <div class="nano">
+                                            <div class="content">
+                                                <ul id="groups-list" class="list"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </td>
                 <td>
                     <div id="info-window-container" class="info-window-container">
@@ -100,7 +117,7 @@
                         </div>
 -->
                     </div>
-                    <div id="map-canvas" style="width:100%; height:100%; margin:0px 0px; padding:0px; z-index: 0"></div>
+                    <div id="map-canvas" style="width:100%; height:100%; margin:0px 0px; padding:0px; z-index: 1"></div>
                 </td>
             </tr>  
         </table>

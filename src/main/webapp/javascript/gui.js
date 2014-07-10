@@ -390,10 +390,6 @@ VIZAPP.gui = function () {
             var $groupsList = $("#groups-list");
             $(".list").selectable({filter:"li", cancel:".t-info-trigger,.g-info-trigger"});
             
-            $("div.list-container").height($("td.left-column").innerHeight() 
-                    - $("#list-selector-container").outerHeight() 
-                    - $("#control-panel-container").outerHeight());
-            
             $("#toponyms-list-container").show();
             $("#groups-list-container").hide();
             $activeList = $toponymsList;
@@ -414,6 +410,25 @@ VIZAPP.gui = function () {
             });
             
             $("#info-window-container .panel").hide();
+            
+            $("div#dataset-work-panel").hide();
+            $("div#dataset-select-panel").hide()
+                    .show("slide", {easing:"easeOutExpo", direction: "left", duration: 400 });
+            
+            $("button#load-dataset").button().click(function(){
+                    $("div#dataset-work-panel").show("slide", {
+                        easing:"easeOutExpo", direction: "left", duration: 400,
+                        complete: function(){$("div#dataset-select-panel").hide();}
+                    });
+            });
+            
+            
+            $("button#back-to-dataset").button().click(function(){
+                    $("div#dataset-select-panel").show();
+                    $("div#dataset-work-panel").hide("slide", {
+                        easing:"easeInExpo", direction: "left", duration: 200
+                    });
+            });
 
             VIZAPP.dataInterface.getAllToponyms(function(loadedToponymObjects){
                 for (var i in loadedToponymObjects) {
