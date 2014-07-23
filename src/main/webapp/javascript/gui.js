@@ -431,6 +431,8 @@ VIZAPP.gui = function () {
     
     var chooseDataset = function($dataset){
         var datasetId = $dataset.attr('id');
+        $("#toponyms-list").empty();
+        $("#groups-list").empty();
         VIZAPP.dataInterface.getDatasetToponyms(datasetId, function(loadedToponymObjects){
             displayToponymsInAList(loadedToponymObjects);
         });
@@ -536,7 +538,7 @@ VIZAPP.gui = function () {
                     $("<button>")
                         .text(dataset.name)
                         .attr("id", dataset.datasetNo)
-                        .addClass("btn btn-default")
+                        .addClass("btn btn-default dataset-btn center-block")
                         .button()
                         .click(function(){ chooseDataset($(this)); })
                         .appendTo("#dataset-select-panel");

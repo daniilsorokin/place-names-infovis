@@ -37,20 +37,25 @@
                     <div id="dataset-work-panel" class="sliding-panel left-column">
                         <table class="disable-select page-structure">
                             <tr>
-                                <td class="left-column">
-                                    <div id="list-selector-container" class="left-column-element" >
-                                        <button id="back-to-dataset" class="btn btn-default btn-sm">Back</button>
-                                        <div id="list-selector" class="btn-group btn-group-sm">
-                                            <button id="select-toponyms-btn" type="button" class="btn btn-primary" disabled>Toponyms</button>
-                                            <button id="select-groups-btn" type="button" class="btn btn-primary" disabled>Groups</button>
-                                        </div>
-                                    </div>
+                                <td id="list-selector-container" class="left-column">
+                                    <table style="width: 100%;"><tr>
+                                        <td style="width: 15%; padding: 2px">
+                                            <button id="back-to-dataset" class="control-btn btn btn-default btn-sm">
+                                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                            </button>
+                                        </td><td style="width: 70%; text-align: center">
+                                            <div id="list-selector" class="btn-group btn-group-sm">
+                                                <button id="select-toponyms-btn" type="button" class="btn btn-primary" disabled>Toponyms</button>
+                                                <button id="select-groups-btn" type="button" class="btn btn-primary" disabled>Groups</button>
+                                            </div>
+                                        </td><td style="width: 15%"></td>
+                                    </tr></table>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="left-column">
                                     <div class="list-control-panel">
-                                        <button id="deselect-button" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-ban-circle" disabled></span></button>
+                                        <button id="deselect-button" class="control-btn btn btn-info btn-sm"><span class="glyphicon glyphicon-ban-circle" disabled></span></button>
                                     </div>
                                 </td>
                             </tr>

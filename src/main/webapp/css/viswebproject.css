@@ -10,7 +10,7 @@ root { display: block;}
 html,body{ margin:0; padding:0; height:100%; border:none}
 table {margin: 0px; padding:0px;}
 tr {margin: 0px; padding:0px;}
-td {margin: 0px; padding:0px;}
+td {margin: 0px; /* padding:0px; */}
 
 /* classes */
 table.page-structure {
@@ -157,12 +157,21 @@ div.mousescroll {
     box-shadow: 2px 0 2px -4px #aaaaaa;
 }
 
-/* particular elements (based on id) */
-#deselect-button {
+.dataset-btn {
+    width: 70%;
+    
+    margin-top: 5px;
+    
+    display: block;
+}
+
+
+.control-btn {
     margin: 3px;
     padding: 8px 8px;
 }
 
+/* particular elements (based on id) */
 #list-selector-container { 
     text-align: center;
     border-bottom: 1px solid rgb(178, 178, 178);
