@@ -1,6 +1,8 @@
 package de.uni.tuebingen.sfs.toponym.clusters.visualization.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -86,6 +88,18 @@ public class Dataset implements Serializable {
     public void setToponymObjectList(List<ToponymObject> toponymObjectList) {
         this.toponymObjectList = toponymObjectList;
     }
+    
+    @XmlTransient
+    @JsonIgnore
+    public List<Formant> getFormantList() {
+        List<ToponymObject> toponymObjects = getToponymObjectList();
+        HashSet<Formant> formants = new HashSet<>();
+        for (ToponymObject toponymObject : toponymObjects) {
+            Formant formant = toponymObject.getFormant();
+            formants.add(formant);
+        }
+        return new ArrayList<>(formants);
+    }    
 
     @Override
     public int hashCode() {

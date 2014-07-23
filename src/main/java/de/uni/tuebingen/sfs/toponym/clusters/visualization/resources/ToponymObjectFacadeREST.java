@@ -68,6 +68,7 @@ public class ToponymObjectFacadeREST extends AbstractFacade<ToponymObject> {
 //        cq.select(root);
 //        return getEntityManager().createQuery(cq).getResultList();
 //    }
+
     
     @GET
     @Override
@@ -77,7 +78,7 @@ public class ToponymObjectFacadeREST extends AbstractFacade<ToponymObject> {
     }
     
     @GET
-    @Path("name/{id}")
+    @Path("{id}/name")
     public String findName(@PathParam("id") Integer id) {
         return super.find(id).getEnglishTransliteration();
     }   

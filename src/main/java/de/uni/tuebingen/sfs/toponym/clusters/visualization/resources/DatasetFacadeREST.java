@@ -1,6 +1,8 @@
 package de.uni.tuebingen.sfs.toponym.clusters.visualization.resources;
 
 import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.Dataset;
+import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.Formant;
+import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.ToponymObject;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +41,24 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
     public Dataset find(@PathParam("id") Integer id) {
         return super.find(id);
     }
+    
+    @GET
+    @Path("{id}/toponymobjects")
+    @Produces({"application/xml", "application/json"})
+    public List<ToponymObject> getDatasetToponyms (@PathParam("id") Integer id) {
+        Dataset dataset = super.find(id);
+        return dataset.getToponymObjectList();
+    }
+    
+    @GET
+    @Path("{id}/formants")
+    @Produces({"application/xml", "application/json"})
+    public List<Formant> getDatasetFormants (@PathParam("id") Integer id) {
+        Dataset dataset = super.find(id);
+        return dataset.getFormantList();
+    }    
 
+    
     @GET
     @Override
     @Produces({"application/xml", "application/json"})

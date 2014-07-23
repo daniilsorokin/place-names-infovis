@@ -24,13 +24,30 @@ VIZAPP.dataInterface = function () {
                     } else {
                         var toponyms = data.toponymObject;
                         if (!(toponyms instanceof Array)){
-                            toponyms = [toponyms]
+                            toponyms = [toponyms];
                         }
                         doWithToponyms(toponyms);                    
                     }
                 });
             }
         },
+        getDatasetToponyms: function (datasetId, doWithToponyms){
+            if (type == "dummy") {
+                doWithToponyms(VIZAPP.dummies.toponymObjects);
+            } else if (type == "real") {
+                $.getJSON("request/dataset/" + datasetId + "/toponymobjects", {}, function(data) {
+                    if (data instanceof Array){
+                        doWithToponyms(data);
+                    } else {
+                        var toponyms = data.toponymObject;
+                        if (!(toponyms instanceof Array)){
+                            toponyms = [toponyms];
+                        }
+                        doWithToponyms(toponyms);                    
+                    }
+                });
+            }
+        },        
         getAllFormants: function (doWithFormants) {
             if (type == "dummy") {
                 doWithFormants(VIZAPP.dummies.formants);
@@ -41,12 +58,42 @@ VIZAPP.dataInterface = function () {
                     } else {
                         var formants = data.formant;
                         if (!(formants instanceof Array)){
-                            formants = [formants]
+                            formants = [formants];
                         }
                         doWithFormants(formants);                    
                     }
                 });
             }
+        },
+        getDatasetFormants:function (datasetId, doWithFormants) {
+            if (type == "dummy") {
+                doWithFormants(VIZAPP.dummies.formants);
+            } else if (type == "real") {
+                $.getJSON("request/dataset/" + datasetId + "/formants", {}, function(data) {
+                    if (data instanceof Array){
+                        doWithFormants(data);
+                    } else {
+                        var formants = data.formant;
+                        if (!(formants instanceof Array)){
+                            formants = [formants];
+                        }
+                        doWithFormants(formants);                    
+                    }
+                });
+            }
+        },
+        getDatasetList: function (doWithResults) {
+            $.getJSON("request/dataset/", {}, function(data) {
+                if (data instanceof Array){
+                    doWithResults(data);
+                } else {
+                    var datasets = data.dataset;
+                    if (!(datasets instanceof Array)){
+                        datasets = [datasets];
+                    }
+                    doWithResults(datasets);                    
+                }
+            });
         },
         getToponymsSet: function(ids, doWithResults) {
             $.getJSON("request/toponymobject/set", {id: ids}, function(data) {
@@ -381,6 +428,77 @@ VIZAPP.gui = function () {
             deselectToponym($toponym);
         }
     };
+    
+    var chooseDataset = function($dataset){
+        var datasetId = $dataset.attr('id');
+        VIZAPP.dataInterface.getDatasetToponyms(datasetId, function(loadedToponymObjects){
+            displayToponymsInAList(loadedToponymObjects);
+        });
+        
+        VIZAPP.dataInterface.getDatasetFormants(datasetId, function(loadedFormants) {
+            displayFormantsInAList(loadedFormants);
+        });
+        $("div#dataset-work-panel").show("slide", {
+            easing:"easeOutExpo", direction: "left", duration: 400,
+            complete: function(){$("div#dataset-select-panel").hide();}
+        });        
+    }
+    
+    var displayToponymsInAList = function(toponymObjectArray){
+        for (var i in toponymObjectArray) {
+            var toponym = toponymObjectArray[i];
+            var $toponymHtml = $("<span>")
+                    .text(toponym.name);
+            $("<span>").addClass("glyphicon")
+                    .addClass("glyphicon-chevron-right")
+                    .addClass("pull-right")
+                    .addClass("t-info-trigger")
+                    .click(function(){ showInfo($(this)); })
+                    .appendTo($toponymHtml)
+                    .css('visibility', 'hidden');
+            $("<li>").attr("id", toponym.toponymNo)
+                    .data("formant-id", toponym.formant.formantNo)
+                    .data("toponym-object", toponym)
+                    .addClass("ui-widget-content")
+                    .html($toponymHtml)
+                    .hover( function(){$(".t-info-trigger", this).css('visibility', 'visible');},
+                            function(){$("span.t-info-trigger:not(.triggered)", this).css('visibility', 'hidden');} )
+                    .appendTo("#toponyms-list");
+        }
+        $("#select-toponyms-btn").prop("disabled", false);
+        $(".nano").nanoScroller();
+    };
+    
+    var displayFormantsInAList = function(formantArray){
+        for (var i in formantArray) {
+            var formant = formantArray[i];
+            var color = colorGenerator.generateNextColor();
+            var $groupHtml = $("<span>").text(formant.formantName);
+            $("<span>").addClass("glyphicon")
+                    .addClass("glyphicon-chevron-right")
+                    .addClass("pull-right")
+                    .addClass("g-info-trigger")
+                    .click(function(){ showInfo($(this)); })
+                    .appendTo($groupHtml)
+                    .css('visibility', 'hidden');
+            $("<span>")
+                    .addClass("small")
+                    .addClass("pull-right")
+                    .addClass("group-badge")
+                    .text(formant.toponymIds.length)
+                    .appendTo($groupHtml);
+            $("<li>").attr("id", formant.formantNo)
+                    .data("formant-object", formant)
+                    .data("formant-color", color)
+                    .addClass("ui-widget-content")
+                    .html($groupHtml)
+                    .hover( function(){$(".g-info-trigger",this).css('visibility', 'visible');},
+                            function(){$("span.g-info-trigger:not(.triggered)",this).css('visibility', 'hidden');} )
+                    .appendTo("#groups-list");
+        }
+        $("#select-groups-btn").prop("disabled", false);
+        $(".nano").nanoScroller();
+    };
 
     return {
         init: function () {
@@ -411,17 +529,23 @@ VIZAPP.gui = function () {
             
             $("#info-window-container .panel").hide();
             
+            
+            VIZAPP.dataInterface.getDatasetList(function(datasetList){
+                for (var i in datasetList) {
+                    var dataset = datasetList[i];
+                    $("<button>")
+                        .text(dataset.name)
+                        .attr("id", dataset.datasetNo)
+                        .addClass("btn btn-default")
+                        .button()
+                        .click(function(){ chooseDataset($(this)); })
+                        .appendTo("#dataset-select-panel");
+                }
+            });
+            
             $("div#dataset-work-panel").hide();
             $("div#dataset-select-panel").hide()
                     .show("slide", {easing:"easeOutExpo", direction: "left", duration: 400 });
-            
-            $("button#load-dataset").button().click(function(){
-                    $("div#dataset-work-panel").show("slide", {
-                        easing:"easeOutExpo", direction: "left", duration: 400,
-                        complete: function(){$("div#dataset-select-panel").hide();}
-                    });
-            });
-            
             
             $("button#back-to-dataset").button().click(function(){
                     $("div#dataset-select-panel").show();
@@ -430,59 +554,6 @@ VIZAPP.gui = function () {
                     });
             });
 
-            VIZAPP.dataInterface.getAllToponyms(function(loadedToponymObjects){
-                for (var i in loadedToponymObjects) {
-                    var toponym = loadedToponymObjects[i];
-                    var $toponymHtml = $("<span>")
-                        .text(toponym.name);
-                    $("<span>").addClass("glyphicon")
-                        .addClass("glyphicon-chevron-right")
-                        .addClass("pull-right")
-                        .addClass("t-info-trigger")
-                        .click(function(){ showInfo($(this)); })
-                        .appendTo($toponymHtml)
-                        .css('visibility', 'hidden');
-                    $("<li>").attr("id", toponym.toponymNo)
-                    .data("formant-id", toponym.formant.formantNo)
-                    .data("toponym-object", toponym)
-                    .addClass("ui-widget-content")
-                    .html($toponymHtml)
-                    .hover(function(){$(".t-info-trigger", this).css('visibility', 'visible');},function(){$("span.t-info-trigger:not(.triggered)", this).css('visibility', 'hidden');})
-                    .appendTo($toponymsList);
-                }
-                $("#select-toponyms-btn").prop("disabled", false);
-                $(".nano").nanoScroller();
-            });
-
-            VIZAPP.dataInterface.getAllFormants(function(loadedFormants) {
-                for (var i in loadedFormants) {
-                    var formant = loadedFormants[i];
-                    var color = colorGenerator.generateNextColor();
-                    var $groupHtml = $("<span>").text(formant.formantName);
-                    $("<span>").addClass("glyphicon")
-                        .addClass("glyphicon-chevron-right")
-                        .addClass("pull-right")
-                        .addClass("g-info-trigger")
-                        .click(function(){ showInfo($(this)); })
-                        .appendTo($groupHtml)
-                        .css('visibility', 'hidden');
-                    $("<span>")
-                    .addClass("small")
-                        .addClass("pull-right")
-                        .addClass("group-badge")
-                        .text(formant.toponymIds.length)
-                        .appendTo($groupHtml);
-                    $("<li>").attr("id", formant.formantNo)
-                    .data("formant-object", formant)
-                    .data("formant-color", color)
-                    .addClass("ui-widget-content")
-                    .html($groupHtml)
-                    .hover(function(){$(".g-info-trigger",this).css('visibility', 'visible');},function(){$("span.g-info-trigger:not(.triggered)",this).css('visibility', 'hidden');})
-                    .appendTo($groupsList);
-                }
-                $("#select-groups-btn").prop("disabled", false);
-                $(".nano").nanoScroller();
-            });
 
             $toponymsList.on( "selectablestop", function( event, ui ) {
                 $("li.ui-selected" , this).each(function() { 

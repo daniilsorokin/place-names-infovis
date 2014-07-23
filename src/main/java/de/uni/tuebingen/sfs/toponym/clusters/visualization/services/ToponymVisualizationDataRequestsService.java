@@ -14,7 +14,8 @@ import javax.ws.rs.core.Application;
 public class ToponymVisualizationDataRequestsService extends Application {
     private ImmutableSet<Object> singletons = ImmutableSet.<Object>of(
                                                                 new ToponymObjectFacadeREST(),
-                                                                new FormantFacadeREST());
+                                                                new FormantFacadeREST(),
+                                                                new DatasetFacadeREST());
     
     @Override
     public Set<Object> getSingletons (){
