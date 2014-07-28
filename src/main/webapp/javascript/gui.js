@@ -38,7 +38,7 @@ VIZAPP.dataInterface = function () {
                 $.getJSON("request/dataset/" + datasetId + "/toponymobjects", {}, function(data) {
                     if (data instanceof Array){
                         doWithToponyms(data);
-                    } else {
+                    } else if (data !== null){
                         var toponyms = data.toponymObject;
                         if (!(toponyms instanceof Array)){
                             toponyms = [toponyms];
@@ -72,7 +72,7 @@ VIZAPP.dataInterface = function () {
                 $.getJSON("request/dataset/" + datasetId + "/formants", {}, function(data) {
                     if (data instanceof Array){
                         doWithFormants(data);
-                    } else {
+                    } else if (data !== null) {
                         var formants = data.formant;
                         if (!(formants instanceof Array)){
                             formants = [formants];
@@ -221,7 +221,7 @@ VIZAPP.myMap = function () {
         },
 
         hidePolygon:  function (formant) {
-            if (polygons[formant.formantNo] !== undefined)
+            if (formant != undefined && polygons[formant.formantNo] !== undefined)
                 polygons[formant.formantNo].setMap(null);
         },
     };
@@ -384,7 +384,7 @@ VIZAPP.gui = function () {
         for(var idx in toponymIds) {
             var $toponym = $("#" + toponymIds[idx], $("#toponyms-list"));
             var toponym =  $toponym.data("toponym-object");
-            if (toponym.latitude != "0.0")
+            if (toponym.latitude !== "0.0")
                 coordinates.push({x:parseFloat(toponym.latitude), y:parseFloat(toponym.longitude)});
             selectToponym($toponym);
             $toponym.addClass("ui-selected");
@@ -411,9 +411,9 @@ VIZAPP.gui = function () {
     };
 
     var updateFormantState = function ($toponym) {
-        $formant = $("#"+ $toponym.data("formant-id"), $("#groups-list"));
+        var $formant = $("#"+ $toponym.data("formant-id"), $("#groups-list"));
         $formant.removeClass("ui-selected")
-        .css({ background: "#FFFFFF" });
+                .css({ background: "#FFFFFF" });
         VIZAPP.myMap.hidePolygon($formant.data("formant-object"));
     }
 
@@ -435,16 +435,16 @@ VIZAPP.gui = function () {
         $("#groups-list").empty();
         VIZAPP.dataInterface.getDatasetToponyms(datasetId, function(loadedToponymObjects){
             displayToponymsInAList(loadedToponymObjects);
+            $("div#dataset-work-panel").show("slide", {
+                easing:"easeOutExpo", direction: "left", duration: 400,
+                complete: function(){$("div#dataset-select-panel").hide();}
+            }); 
         });
         
         VIZAPP.dataInterface.getDatasetFormants(datasetId, function(loadedFormants) {
             displayFormantsInAList(loadedFormants);
         });
-        $("div#dataset-work-panel").show("slide", {
-            easing:"easeOutExpo", direction: "left", duration: 400,
-            complete: function(){$("div#dataset-select-panel").hide();}
-        });        
-    }
+    };
     
     var displayToponymsInAList = function(toponymObjectArray){
         for (var i in toponymObjectArray) {
@@ -459,7 +459,7 @@ VIZAPP.gui = function () {
                     .appendTo($toponymHtml)
                     .css('visibility', 'hidden');
             $("<li>").attr("id", toponym.toponymNo)
-                    .data("formant-id", toponym.formant.formantNo)
+                    .data("formant-id", (toponym.formant !== undefined ? toponym.formant.formantNo : null) )
                     .data("toponym-object", toponym)
                     .addClass("ui-widget-content")
                     .html($toponymHtml)
@@ -501,6 +501,22 @@ VIZAPP.gui = function () {
         $("#select-groups-btn").prop("disabled", false);
         $(".nano").nanoScroller();
     };
+    
+    var refreshDatasetList = function() {
+        $("#dataset-btn-list").empty();
+        VIZAPP.dataInterface.getDatasetList(function(datasetList){
+            for (var i in datasetList) {
+                var dataset = datasetList[i];
+                $("<button>")
+                        .text(dataset.name)
+                        .attr("id", dataset.datasetNo)
+                        .addClass("btn btn-default dataset-btn center-block")
+                        .button()
+                        .click(function(){ chooseDataset($(this)); })
+                        .appendTo("#dataset-btn-list");
+            }
+        });
+    };
 
     return {
         init: function () {
@@ -531,18 +547,33 @@ VIZAPP.gui = function () {
             
             $("#info-window-container .panel").hide();
             
+            refreshDatasetList();
             
-            VIZAPP.dataInterface.getDatasetList(function(datasetList){
-                for (var i in datasetList) {
-                    var dataset = datasetList[i];
-                    $("<button>")
-                        .text(dataset.name)
-                        .attr("id", dataset.datasetNo)
-                        .addClass("btn btn-default dataset-btn center-block")
-                        .button()
-                        .click(function(){ chooseDataset($(this)); })
-                        .appendTo("#dataset-select-panel");
-                }
+            $("#upload-dataset-btn").button().click(function(){
+                $("#dataset-file").click();
+            });   
+            
+            $("#dataset-file").change(function(){
+                var selectedFile = $("#dataset-file")[0].files[0];
+                var fileType = "text/plain";
+                
+                $.ajax({
+                    url: "request/dataset/upload",
+                    type: 'POST',
+//                    xhr: function() {  // custom xhr
+//                        var myXhr = $.ajaxSettings.xhr();
+//                        if(myXhr.upload){ // check if upload property exists
+//                            myXhr.upload.addEventListener('progress',uploadProgressHandler, false); // for handling the progress of the upload
+//                        }
+//                        return myXhr;
+//                    },
+                    success: refreshDatasetList,
+//                    error: onError,
+                    data: selectedFile,
+                    contentType: fileType,
+                    processData: false,
+                    cache:false
+                });
             });
             
             $("div#dataset-work-panel").hide();

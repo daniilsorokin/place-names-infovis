@@ -3,6 +3,7 @@ package de.uni.tuebingen.sfs.toponym.clusters.visualization.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +26,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonValue;
+import org.jsefa.csv.annotation.CsvDataType;
+import org.jsefa.csv.annotation.CsvField;
 
 /**
  *
@@ -33,6 +36,7 @@ import org.codehaus.jackson.annotate.JsonValue;
 @Entity
 @Table(name = "formants")
 @XmlRootElement
+@CsvDataType
 @NamedQueries({
     @NamedQuery(name = "Formant.findAll", query = "SELECT f FROM Formant f"),
     @NamedQuery(name = "Formant.findByFormantNo", query = "SELECT f FROM Formant f WHERE f.formantNo = :formantNo"),
@@ -48,6 +52,7 @@ public class Formant implements Serializable {
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "formant_name")
+    @CsvField(pos = 1)
     private String formantName;
     @ManyToMany(mappedBy = "formantList")
     private List<Affix> affixList;
@@ -59,7 +64,8 @@ public class Formant implements Serializable {
     protected Formant() {
     }
 
-    public Formant(String formantName) {
+    public Formant(int id, String formantName) {
+        this.formantNo = id;
         this.formantName = formantName;
     }
 
@@ -110,23 +116,28 @@ public class Formant implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (formantNo != null ? formantNo.hashCode() : 0);
+        int hash = 3;
+        hash = 43 * hash + Objects.hashCode(this.formantName);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof Formant)) {
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
-        Formant other = (Formant) object;
-        if ((this.formantNo == null && other.formantNo != null) || (this.formantNo != null && !this.formantNo.equals(other.formantNo))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Formant other = (Formant) obj;
+        if (!Objects.equals(this.formantName, other.formantName)) {
             return false;
         }
         return true;
     }
 
+    
+    
     @Override
     public String toString() {
         return "Formant[ formantNo=" + formantNo + "  name=" + formantName + " ]";

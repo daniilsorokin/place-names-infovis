@@ -32,7 +32,18 @@
             <tr>
                 <td class="left-column" style="background-color: #d7d7d7; box-shadow: 0 0 4px #aaaaaa inset;">
                     <div id="dataset-select-panel" class="sliding-panel left-column">
-                        <h3>Select a dataset</h3>
+                        <div class="wrapper">
+                            <h3>Select a dataset</h3>
+                            <div id="dataset-btn-list">
+                            </div>
+                            <button id="upload-dataset-btn" class="btn btn-default dataset-btn center-block">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                            <input id="dataset-file" name="dataset-file" type="file" style="display:none">
+                        </div>
+                        <div class="bg-info footer">
+                            <h4>You don't have to log in.</h4>
+                        </div>
                     </div>
                     <div id="dataset-work-panel" class="sliding-panel left-column">
                         <table class="disable-select page-structure">
@@ -55,7 +66,8 @@
                             <tr>
                                 <td class="left-column">
                                     <div class="list-control-panel">
-                                        <button id="deselect-button" class="control-btn btn btn-info btn-sm"><span class="glyphicon glyphicon-ban-circle" disabled></span></button>
+                                        <input class="form-control control-btn input-sm pull-left" placeholder="Type for search" style="width: 50%; display: inline">
+                                        <button id="deselect-button" class="control-btn btn btn-info btn-sm pull-right"><span class="glyphicon glyphicon-ban-circle" disabled></span></button>
                                     </div>
                                 </td>
                             </tr>

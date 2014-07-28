@@ -2,7 +2,12 @@ package de.uni.tuebingen.sfs.toponym.clusters.visualization.resources;
 
 import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.Dataset;
 import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.Formant;
+import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.Formant_;
 import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.ToponymObject;
+import de.uni.tuebingen.sfs.toponym.clusters.visualization.services.ToponymVisualizationDataRequestsService;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,10 +15,19 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+import org.jsefa.Deserializer;
+import org.jsefa.csv.CsvIOFactory;
+import org.jsefa.csv.config.CsvConfiguration;
 
 /**
  *
@@ -72,6 +86,53 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
     public String countREST() {
         return String.valueOf(super.count());
     }
+    
+    public List<Formant> findFormantByName (String name){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        Root<Formant> root = cq.from(Formant.class);
+        cq.where(cb.equal(root.get(Formant_.formantName), name));
+        cq.select(root);
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    @POST
+    @Path("upload")
+    @Consumes("text/plain")
+    public Response loadToponyms(String toponymsAsCsv){
+        CsvConfiguration csvConfiguration = new CsvConfiguration();
+        csvConfiguration.setFieldDelimiter('\t');
+        csvConfiguration.getSimpleTypeConverterProvider().registerConverterType(Double.class, DoubleConverter.class);
+        Deserializer deserializer = CsvIOFactory.createFactory(csvConfiguration, ToponymObject.class).createDeserializer();
+        StringReader reader = new StringReader(toponymsAsCsv);
+        deserializer.open(reader);
+        Dataset newDataset = new Dataset(super.count(), "bawu dataset");
+        
+        em.getTransaction().begin();
+        em.persist(newDataset);
+        em.getTransaction().commit();
+        
+        while (deserializer.hasNext()) {
+            em.getTransaction().begin();
+            ToponymObject t = deserializer.next();
+            Formant f = t.getFormant();
+            if (f != null) {
+                List<Formant> results = findFormantByName(f.getFormantName());
+                if (results.isEmpty()){
+                    em.persist(f);
+                } else {
+                    t.setFormant(results.get(0));
+                }
+            }
+            t.setDataset(newDataset);
+            newDataset.addToponymObjectToList(t);
+            em.persist(t);
+            em.getTransaction().commit();
+        }
+        deserializer.close(true);
+        return Response.ok().build();
+    }
+    
 
     @Override
     protected EntityManager getEntityManager() {

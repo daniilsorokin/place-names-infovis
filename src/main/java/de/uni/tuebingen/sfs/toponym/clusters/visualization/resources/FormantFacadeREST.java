@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.ws.rs.GET;
@@ -47,6 +48,15 @@ public class FormantFacadeREST extends AbstractFacade<Formant> {
     @Produces({"application/xml", "application/json"})
     public Formant find(@PathParam("id") Integer id) {
         return super.find(id);
+    }
+    
+    public List<Formant> findByName (String name){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        Root<Formant> root = cq.from(Formant.class);
+        cq.where(cb.equal(root.get(Formant_.formantName), name));
+        cq.select(root);
+        return getEntityManager().createQuery(cq).getResultList();
     }
 
     @GET

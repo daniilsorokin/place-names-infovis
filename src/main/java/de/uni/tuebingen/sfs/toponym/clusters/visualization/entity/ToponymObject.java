@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.jsefa.csv.annotation.CsvDataType;
+import org.jsefa.csv.annotation.CsvField;
 
 /**
  *
@@ -28,6 +30,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @Table(name = "toponym_objects")
 @XmlRootElement
+@CsvDataType
 @NamedQueries({
     @NamedQuery(name = "ToponymObject.findAll", query = "SELECT t FROM ToponymObject t"),
     @NamedQuery(name = "ToponymObject.findByToponymNo", query = "SELECT t FROM ToponymObject t WHERE t.toponymNo = :toponymNo"),
@@ -45,6 +48,7 @@ public class ToponymObject implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
+    @CsvField(pos = 1)
     private String name;
     @Size(max = 2147483647)
     @Column(name = "other_names")
@@ -53,8 +57,10 @@ public class ToponymObject implements Serializable {
     private String englishTransliteration;    
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "latitude")
+    @CsvField(pos = 2)
     private Double latitude;
     @Column(name = "longitude")
+    @CsvField(pos = 3)
     private Double longitude;
     @ManyToMany(mappedBy = "toponymObjectList")
     private List<Affix> affixList;
@@ -66,6 +72,7 @@ public class ToponymObject implements Serializable {
     private Language language;
     @JoinColumn(name = "formant", referencedColumnName = "formant_no")
     @ManyToOne
+    @CsvField(pos = 4)
     private Formant formant;
     @JoinColumn(name = "dataset", referencedColumnName = "dataset_no")
     @ManyToOne

@@ -1,5 +1,6 @@
 package de.uni.tuebingen.sfs.toponym.clusters.visualization.entity;
 
+import de.uni.tuebingen.sfs.toponym.clusters.visualization.resources.DatasetFacadeREST;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -51,7 +52,8 @@ public class Dataset implements Serializable {
     protected Dataset() {
     }
 
-    public Dataset(String name) {
+    public Dataset(int id, String name) {
+        this.datasetNo = id;
         this.name = name;
     }
 
@@ -89,6 +91,12 @@ public class Dataset implements Serializable {
         this.toponymObjectList = toponymObjectList;
     }
     
+    public void addToponymObjectToList(ToponymObject t){
+        if (toponymObjectList == null)
+            this.toponymObjectList = new ArrayList<>();
+        this.toponymObjectList.add(t);
+    }
+    
     @XmlTransient
     @JsonIgnore
     public List<Formant> getFormantList() {
@@ -96,7 +104,7 @@ public class Dataset implements Serializable {
         HashSet<Formant> formants = new HashSet<>();
         for (ToponymObject toponymObject : toponymObjects) {
             Formant formant = toponymObject.getFormant();
-            formants.add(formant);
+            if (formant != null) formants.add(formant);
         }
         return new ArrayList<>(formants);
     }    
