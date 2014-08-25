@@ -48,6 +48,8 @@ public class Dataset implements Serializable {
     private String info;
     @OneToMany(mappedBy = "dataset")
     private List<ToponymObject> toponymObjectList;
+    @OneToMany(mappedBy = "dataset")
+    private List<Formant> formantList;
 
     protected Dataset() {
     }
@@ -91,15 +93,30 @@ public class Dataset implements Serializable {
         this.toponymObjectList = toponymObjectList;
     }
     
-    public void addToponymObjectToList(ToponymObject t){
-        if (toponymObjectList == null)
-            this.toponymObjectList = new ArrayList<>();
-        this.toponymObjectList.add(t);
-    }
-    
     @XmlTransient
     @JsonIgnore
     public List<Formant> getFormantList() {
+        return formantList;
+    }
+
+    public void setFormantList(List<Formant> formantList) {
+        this.formantList = formantList;
+    }    
+    
+    public void addToponymObjectToList(ToponymObject t){
+        if (this.toponymObjectList == null)
+            this.toponymObjectList = new ArrayList<>();
+        this.toponymObjectList.add(t);
+    }
+
+    public void addFormantToList(Formant f){
+        if (this.formantList == null)
+            this.formantList = new ArrayList<>();
+        this.formantList.add(f);
+    }
+    
+    @Deprecated
+    public List<Formant> getFormantList2() {
         List<ToponymObject> toponymObjects = getToponymObjectList();
         HashSet<Formant> formants = new HashSet<>();
         for (ToponymObject toponymObject : toponymObjects) {

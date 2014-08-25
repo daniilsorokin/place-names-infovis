@@ -96,17 +96,31 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
         return getEntityManager().createQuery(cq).getResultList();
     }
     
+    private Formant getOriginal(Formant f){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        Root<Formant> root = cq.from(Formant.class);
+        cq.where(cb.and(
+                cb.equal(root.get(Formant_.formantName), f.getFormantName()),
+                cb.equal(root.get(Formant_.dataset), f.getDataset())
+                ));
+        cq.select(root);
+        List<Formant> results = getEntityManager().createQuery(cq).getResultList();
+        if (results.isEmpty()) return null;
+        else return results.get(0);
+    }
+    
     @POST
-    @Path("upload")
+    @Path("upload/{name}")
     @Consumes("text/plain")
-    public Response loadToponyms(String toponymsAsCsv){
+    public Response loadToponyms(String toponymsAsCsv, @PathParam("name") String datasetName){
         CsvConfiguration csvConfiguration = new CsvConfiguration();
         csvConfiguration.setFieldDelimiter('\t');
         csvConfiguration.getSimpleTypeConverterProvider().registerConverterType(Double.class, DoubleConverter.class);
         Deserializer deserializer = CsvIOFactory.createFactory(csvConfiguration, ToponymObject.class).createDeserializer();
         StringReader reader = new StringReader(toponymsAsCsv);
         deserializer.open(reader);
-        Dataset newDataset = new Dataset(super.count(), "bawu dataset");
+        Dataset newDataset = new Dataset(super.count(), datasetName);
         
         em.getTransaction().begin();
         em.persist(newDataset);
@@ -117,11 +131,13 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
             ToponymObject t = deserializer.next();
             Formant f = t.getFormant();
             if (f != null) {
-                List<Formant> results = findFormantByName(f.getFormantName());
-                if (results.isEmpty()){
+                f.setDataset(newDataset);
+                Formant fo = getOriginal(f);
+                if (fo == null){
+                    newDataset.addFormantToList(f);
                     em.persist(f);
                 } else {
-                    t.setFormant(results.get(0));
+                    t.setFormant(fo);
                 }
             }
             t.setDataset(newDataset);

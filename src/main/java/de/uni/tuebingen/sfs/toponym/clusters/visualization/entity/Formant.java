@@ -10,7 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -42,6 +44,7 @@ import org.jsefa.csv.annotation.CsvField;
     @NamedQuery(name = "Formant.findByFormantNo", query = "SELECT f FROM Formant f WHERE f.formantNo = :formantNo"),
     @NamedQuery(name = "Formant.findByFormantName", query = "SELECT f FROM Formant f WHERE f.formantName = :formantName")})
 public class Formant implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,10 +59,11 @@ public class Formant implements Serializable {
     private String formantName;
     @ManyToMany(mappedBy = "formantList")
     private List<Affix> affixList;
+    @JoinColumn(name = "dataset", referencedColumnName = "dataset_no")
+    @ManyToOne
+    private Dataset dataset;
     @OneToMany(mappedBy = "formant")
     private List<ToponymObject> toponymObjectList;
-//    @Transient
-//    private List<Integer> toponymObjectIdList;
     
     protected Formant() {
     }
@@ -84,6 +88,14 @@ public class Formant implements Serializable {
     public void setFormantName(String formantName) {
         this.formantName = formantName;
     }
+    
+    public Dataset getDataset() {
+        return dataset;
+    }
+
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
+    }    
 
     @XmlTransient
     @JsonIgnore
