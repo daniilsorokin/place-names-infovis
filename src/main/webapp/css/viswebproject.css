@@ -188,6 +188,100 @@ div.mousescroll {
     border-collapse: collapse;*/
 }
 
+.full-alert {
+    width: 400px;
+    
+    position: absolute;
+    top: 20%;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    
+    margin: 0 auto;
+    padding: 10px;
+    
+    text-align: center;
+    
+    border: 1px solid #aaaaaa;
+    background-color: white;
+    box-shadow: 2px 2px 4px -4px #aaaaaa;
+}
+
+.simple-button {
+    text-align: center;
+    padding: 2px;
+    
+    border: 1px solid #aaaaaa;
+    background-color: white;
+    border-collapse: collapse;
+    
+    font-weight: bold;
+}
+
+.simple-button:active {
+    background-color: #eeeeee;
+}
+
+.simple-button:focus {
+    outline: 0;
+}
+
+.simple-button.selected {
+    color: white;
+    background: -webkit-linear-gradient(#00afff, #028ac8); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#00afff, #028ac8); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#00afff, #028ac8); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#00afff, #028ac8); /* Standard syntax */
+}
+
+.simple-block-justified {
+    width:100%;
+    display: table;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.simple-block > .simple-button {
+    margin-right: 0 !important;
+    margin-left: -1px;
+}
+
+.simple-block-justified > .simple-block-justified {
+    display: table-cell;
+    border: 1px solid #aaaaaa;
+}
+
+.simple-block-justified > .simple-button {
+    width: 100%;
+    border: 0px;
+}
+
+.select-area {
+    width: 100%;
+    height: 100px;
+    
+    margin: 10px 0px;
+    padding: 5px;
+    
+    text-align: center;
+    vertical-align: middle;
+    display: table;
+    
+    border: 2px dashed #aaaaaa;
+    
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.select-area > span {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.input-text {
+    padding: 5px 5px;
+}
+
 /* particular elements (based on id) */
 #list-selector-container { 
     text-align: center;

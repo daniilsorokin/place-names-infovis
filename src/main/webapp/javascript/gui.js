@@ -551,31 +551,60 @@ VIZAPP.gui = function () {
             
             refreshDatasetList();
             
-            $("#upload-dataset-btn").button().click(function(){
+            $("#upload-dataset-btn").click(function(){
+                $("#load-file-modal").show("drop", {easing:"easeOutExpo", direction: "up", duration: 400 });
+            }); 
+            
+            $("#cancel-button").click(function(){
+                $("#load-file-modal").hide();
+            });
+            
+            $("#load-file-modal").hide();
+            
+            $("#select-dataset-file").click(function(){
                 $("#dataset-file").click();
-            });   
+            });
+            
+            
+            $("#load-button").click(function(){
+                var selectedFile = $("#dataset-file")[0].files[0];
+                var fileType = "text/plain";
+                if ($("#name-dataset").val() === "") {
+                    $("#name-dataset").focus();
+                } else {
+                    var datasetName = $("#name-dataset").val();
+                    $.ajax({
+                        url: "request/dataset/upload/" + datasetName,
+                        type: 'POST',
+                        //                    xhr: function() {  // custom xhr
+                        //                        var myXhr = $.ajaxSettings.xhr();
+                        //                        if(myXhr.upload){ // check if upload property exists
+                        //                            myXhr.upload.addEventListener('progress',uploadProgressHandler, false); // for handling the progress of the upload
+                        //                        }
+                        //                        return myXhr;
+                        //                    },
+                        success: refreshDatasetList,
+                        //                    error: onError,
+                        data: selectedFile,
+                        contentType: fileType,
+                        processData: false,
+                        cache:false
+                    });
+                }
+                $("#load-file-modal").hide();
+            });
+            
             
             $("#dataset-file").change(function(){
                 var selectedFile = $("#dataset-file")[0].files[0];
-                var fileType = "text/plain";
-                var datasetName = "test name";
-                $.ajax({
-                    url: "request/dataset/upload/" + datasetName,
-                    type: 'POST',
-//                    xhr: function() {  // custom xhr
-//                        var myXhr = $.ajaxSettings.xhr();
-//                        if(myXhr.upload){ // check if upload property exists
-//                            myXhr.upload.addEventListener('progress',uploadProgressHandler, false); // for handling the progress of the upload
-//                        }
-//                        return myXhr;
-//                    },
-                    success: refreshDatasetList,
-//                    error: onError,
-                    data: selectedFile,
-                    contentType: fileType,
-                    processData: false,
-                    cache:false
-                });
+                $("#select-dataset-file > span").text(selectedFile.name);
+            });
+            
+            $("#load-file-modal > .simple-block-justified button").click(function(){
+                if(!$(this).hasClass("selected")){
+                    $("#load-file-modal > .simple-block-justified button").removeClass("selected");
+                    $(this).addClass("selected");
+                } 
             });
             
             $("div#dataset-work-panel").hide();
@@ -588,8 +617,7 @@ VIZAPP.gui = function () {
                         easing:"easeInExpo", direction: "left", duration: 200
                     });
             });
-
-
+            
             $toponymsList.on( "selectablestop", function( event, ui ) {
                 $("li.ui-selected" , this).each(function() { 
                     selectToponym($(this));

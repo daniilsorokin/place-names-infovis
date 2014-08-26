@@ -39,7 +39,6 @@
                             <button id="upload-dataset-btn" class="btn btn-default dataset-btn center-block">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
-                            <input id="dataset-file" name="dataset-file" type="file" style="display:none">
                         </div>
                         <div class="bg-info footer">
                             <h4>You don't have to log in.</h4>
@@ -137,5 +136,26 @@
                 </td>
             </tr>  
         </table>
+        <div id="load-file-modal" class="full-alert">
+            <div class="simple-block-justified">
+                <div class="simple-block-justified">
+                    <button id="csv-button" class="simple-button selected">CSV</button>
+                </div>
+                <div class="simple-block-justified">
+                    <button id="tsv-button" class="simple-button">TSV</button>
+                </div>
+            </div>
+            <div id="select-dataset-file" class="select-area">
+                <span>Select file</span>
+            </div>
+            <div>
+                <input id="dataset-file" name="dataset-file" type="file" style="display:none" />
+                <input id="name-dataset" class="input-text" style="width:100%" type="text" placeholder="Type the dataset name" />
+            </div>
+            <div style="margin-top: 15px;">
+                <button id="load-button" class="simple-button" style="width:40%; color: #0066CC">Load</button>
+                <button id="cancel-button" class="simple-button" style="width:40%;">Cancel</button>
+            </div>
+        </div>
     </body>
 </html>
