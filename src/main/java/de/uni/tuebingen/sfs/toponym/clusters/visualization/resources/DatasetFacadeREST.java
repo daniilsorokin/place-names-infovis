@@ -136,8 +136,10 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
                 if (fo == null){
                     newDataset.addFormantToList(f);
                     em.persist(f);
+                    f.addToponymObjectToList(t);
                 } else {
                     t.setFormant(fo);
+                    fo.addToponymObjectToList(t);
                 }
             }
             t.setDataset(newDataset);

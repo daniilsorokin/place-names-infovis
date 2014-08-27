@@ -125,6 +125,12 @@ public class Formant implements Serializable {
         }        
         return toponymObjectIdList;
     }
+    
+    public void addToponymObjectToList(ToponymObject t){
+        if (this.toponymObjectList == null)
+            this.toponymObjectList = new ArrayList<>();
+        this.toponymObjectList.add(t);
+    }
 
     @Override
     public int hashCode() {
