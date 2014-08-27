@@ -69,6 +69,7 @@ public class ToponymObject implements Serializable {
     private ToponymType type;
     @JoinColumn(name = "language", referencedColumnName = "language_no")
     @ManyToOne
+    @CsvField(pos = 5)
     private Language language;
     @JoinColumn(name = "formant", referencedColumnName = "formant_no")
     @ManyToOne

@@ -111,11 +111,20 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
     }
     
     @POST
-    @Path("upload/{name}")
+    @Path("upload/{name}/{type}")
     @Consumes("text/plain")
-    public Response loadToponyms(String toponymsAsCsv, @PathParam("name") String datasetName){
+    public Response loadToponyms(String toponymsAsCsv, @PathParam("name") String datasetName,
+            @PathParam("type") String type){
         CsvConfiguration csvConfiguration = new CsvConfiguration();
-        csvConfiguration.setFieldDelimiter('\t');
+        switch(type.toLowerCase()) {
+            default:
+            case "csv":
+                csvConfiguration.setFieldDelimiter(',');
+                break;
+            case "tsv":
+                csvConfiguration.setFieldDelimiter('\t');
+                break;
+        }
         csvConfiguration.getSimpleTypeConverterProvider().registerConverterType(Double.class, DoubleConverter.class);
         Deserializer deserializer = CsvIOFactory.createFactory(csvConfiguration, ToponymObject.class).createDeserializer();
         StringReader reader = new StringReader(toponymsAsCsv);
@@ -124,10 +133,7 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
         
         em.getTransaction().begin();
         em.persist(newDataset);
-        em.getTransaction().commit();
-        
         while (deserializer.hasNext()) {
-            em.getTransaction().begin();
             ToponymObject t = deserializer.next();
             Formant f = t.getFormant();
             if (f != null) {
@@ -142,11 +148,14 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
                     fo.addToponymObjectToList(t);
                 }
             }
+            if (t.getLanguage() != null){
+                em.persist(t.getLanguage());
+            }
             t.setDataset(newDataset);
             newDataset.addToponymObjectToList(t);
             em.persist(t);
-            em.getTransaction().commit();
         }
+        em.getTransaction().commit();
         deserializer.close(true);
         return Response.ok().build();
     }

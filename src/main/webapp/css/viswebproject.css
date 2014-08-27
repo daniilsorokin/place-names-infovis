@@ -313,6 +313,9 @@ div.mousescroll {
 }
 
 .failed {
+    width: 100%;
+    margin: 0px;
+    
     color: white;
     background: -webkit-linear-gradient(#fe2a31, #cd0108); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(#fe2a31, #cd0108); /* For Opera 11.1 to 12.0 */

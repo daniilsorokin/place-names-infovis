@@ -596,12 +596,13 @@ VIZAPP.gui = function () {
                     $("#name-dataset").focus();
                 } else {
                     var datasetName = $("#name-dataset").val();
+                    var dataType = $("#data-type-options button.selected").text();
                     $("#load-progress").show("slide", {easing:"easeOutExpo", direction: "left", duration: 400});
                     $("#load-progress > .stl-progress").css("width", "0%");
                     $("#load-progress > .stl-progress").text("0");
                     var animation;
                     $.ajax({
-                        url: "request/dataset/upload/" + datasetName,
+                        url: "request/dataset/upload/" + datasetName + "/" + dataType,
                         type: 'POST',
                         xhr: function() { 
                             var myXhr = $.ajaxSettings.xhr();
@@ -629,8 +630,13 @@ VIZAPP.gui = function () {
                         },
                         success: refreshDatasetList,
                         error: function(){
-                            $("#load-progress > .stl-progress").addClass("failed").text("failed");
-                            $("#load-progress").hide("slide", {easing:"easeInExpo", direction: "left", duration: 400});
+                            $("#load-progress > .stl-progress")
+                                    .addClass("failed")
+                                    .css({width: "100%", margin: 0})
+                                    .text("failed");
+                            setTimeout(function(){
+                                    $("#load-progress").hide("slide", {easing:"easeInExpo", direction: "left", duration: 400});
+                                }, 2000);
                         },
                         complete: function() {animation.stop();},
                         data: selectedFile,
