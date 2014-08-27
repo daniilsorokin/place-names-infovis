@@ -533,8 +533,7 @@ VIZAPP.gui = function () {
                 $("<button>")
                         .text(dataset.name)
                         .attr("id", dataset.datasetNo)
-                        .addClass("btn btn-default dataset-btn center-block")
-                        .button()
+                        .addClass("simple-button dataset-btn center-block")
                         .click(function(){ chooseDataset($(this)); })
                         .appendTo("#dataset-btn-list");
             }
@@ -571,6 +570,14 @@ VIZAPP.gui = function () {
             $("#info-window-container .panel").hide();
             
             refreshDatasetList();
+
+            $("#delete-dataset-btn").click(function(){
+                $(this).addClass("selected");
+                $("#dataset-btn-list button").off("click").click(function(){
+                    $(this).toggleClass("selected"); 
+                })
+            }); 
+
             
             $("#upload-dataset-btn").click(function(){
                 $("#load-file-modal").show("drop", {easing:"easeOutExpo", direction: "up", duration: 400 });
