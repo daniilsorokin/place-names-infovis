@@ -160,6 +160,7 @@ div.mousescroll {
 
 .dataset-btn {
     width: 70%;
+    height: 24pt;
     
     margin-top: 5px;
     
@@ -202,9 +203,10 @@ div.mousescroll {
     
     text-align: center;
     
-    border: 1px solid #aaaaaa;
-    background-color: white;
-    box-shadow: 2px 2px 4px -4px #aaaaaa;
+    border: 0px;
+    border-radius: 5px;
+    background-color: rgba(255,255,255,0.8);
+    box-shadow: 2px 2px 4px -2px #aaaaaa;
 }
 
 .simple-button {
@@ -212,8 +214,10 @@ div.mousescroll {
     padding: 2px;
     
     border: 1px solid #aaaaaa;
+    border-radius: 3px;
     background-color: white;
     border-collapse: collapse;
+    box-shadow: 0px 1px 2px 0px #c8c8c8;
     
     font-weight: bold;
 }
@@ -244,6 +248,7 @@ div.mousescroll {
 .simple-block > .simple-button {
     margin-right: 0 !important;
     margin-left: -1px;
+    border-radius: 0px;
 }
 
 .simple-block-justified > .simple-block-justified {
@@ -254,6 +259,7 @@ div.mousescroll {
 .simple-block-justified > .simple-button {
     width: 100%;
     border: 0px;
+    border-radius: 0px;
 }
 
 .select-area {
@@ -268,6 +274,7 @@ div.mousescroll {
     display: table;
     
     border: 2px dashed #aaaaaa;
+    background-color: white;
     
     font-size: 16px;
     cursor: pointer;
@@ -280,6 +287,37 @@ div.mousescroll {
 
 .input-text {
     padding: 5px 5px;
+    
+    background-color: white;
+}
+
+.stl-progress-bar {
+    padding: 0px;
+    height: 24pt;
+    
+    overflow: hidden;
+}
+
+.stl-progress {
+    height: 100%;
+    width: 30px;
+    
+    padding: 4pt;
+    font-size: 12pt;
+        
+    color: white;
+    background: -webkit-linear-gradient(#00afff, #028ac8); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#00afff, #028ac8); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#00afff, #028ac8); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#00afff, #028ac8); /* Standard syntax */    
+}
+
+.failed {
+    color: white;
+    background: -webkit-linear-gradient(#fe2a31, #cd0108); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#fe2a31, #cd0108); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#fe2a31, #cd0108); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#fe2a31, #cd0108); /* Standard syntax */    
 }
 
 /* particular elements (based on id) */

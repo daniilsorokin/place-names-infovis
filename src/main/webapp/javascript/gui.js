@@ -227,6 +227,25 @@ VIZAPP.myMap = function () {
     };
 }();
 
+VIZAPP.objects = function () {
+    return {
+        cycleAnimator: function($element, property, min, max){
+            $element.css(property, min);
+            this.t = setInterval(function(){
+                var state = parseInt($element.css(property));
+                if (state < max) {
+                    state+=2;
+                    $element.css(property, state);
+                } else {
+                    state = min;
+                    $element.css(property, min);
+                }
+            }, 20);
+            this.stop = function(){clearInterval(this.t)};
+        }
+    };
+}();
+
 VIZAPP.gui = function () {
     var colorGenerator = new ColorGenerator(2.4,2.4,2.4,0,2,4);
     var kmeans = new KMeans(); kmeans.kmpp = true;
@@ -248,7 +267,7 @@ VIZAPP.gui = function () {
             done: function() { callback($target) }
         });
 
-    }
+    };
     
     var showInfo = function($element) {
         var $infoWindow = $("#info-panel");
@@ -506,6 +525,8 @@ VIZAPP.gui = function () {
     
     var refreshDatasetList = function() {
         $("#dataset-btn-list").empty();
+        $("#load-progress").hide();
+        $("#upload-dataset-btn").removeAttr("disabled");
         VIZAPP.dataInterface.getDatasetList(function(datasetList){
             for (var i in datasetList) {
                 var dataset = datasetList[i];
@@ -556,42 +577,70 @@ VIZAPP.gui = function () {
             }); 
             
             $("#cancel-button").click(function(){
-                $("#load-file-modal").hide();
+                $("#load-file-modal").hide("drop", {easing:"easeInExpo", direction: "up", duration: 200 });
             });
             
             $("#load-file-modal").hide();
-            
+            $("#load-progress").hide();
+           
             $("#select-dataset-file").click(function(){
                 $("#dataset-file").click();
             });
             
-            
             $("#load-button").click(function(){
                 var selectedFile = $("#dataset-file")[0].files[0];
                 var fileType = "text/plain";
-                if ($("#name-dataset").val() === "") {
+                if (selectedFile === undefined){
+                    $("#select-dataset-file").focus();
+                } else if ($("#name-dataset").val() === "") {
                     $("#name-dataset").focus();
                 } else {
                     var datasetName = $("#name-dataset").val();
+                    $("#load-progress").show("slide", {easing:"easeOutExpo", direction: "left", duration: 400});
+                    $("#load-progress > .stl-progress").css("width", "0%");
+                    $("#load-progress > .stl-progress").text("0");
+                    var animation;
                     $.ajax({
                         url: "request/dataset/upload/" + datasetName,
                         type: 'POST',
-                        //                    xhr: function() {  // custom xhr
-                        //                        var myXhr = $.ajaxSettings.xhr();
-                        //                        if(myXhr.upload){ // check if upload property exists
-                        //                            myXhr.upload.addEventListener('progress',uploadProgressHandler, false); // for handling the progress of the upload
-                        //                        }
-                        //                        return myXhr;
-                        //                    },
+                        xhr: function() { 
+                            var myXhr = $.ajaxSettings.xhr();
+                            if(myXhr.upload){
+                                myXhr.upload.addEventListener('progress',function(e){
+                                    if (e.lengthComputable) {
+                                        var val = Math.round((e.loaded / e.total) * 100);
+                                        if (val < 100){
+                                            $("#load-progress > .stl-progress")
+                                                    .css("width", val + "%")
+                                                    .text(val + "%");
+                                        } else {
+                                            $("#load-progress > .stl-progress")
+                                                    .css("width", "30%")
+                                                    .text("");
+                                            animation = new VIZAPP.objects.cycleAnimator($("#load-progress .stl-progress"), "margin-left", 
+                                                -$("#load-progress .stl-progress").outerWidth(), 
+                                                $("#load-progress").innerWidth()
+                                            );
+                                        }
+                                    }
+                                }, false);
+                            }
+                            return myXhr;
+                        },
                         success: refreshDatasetList,
-                        //                    error: onError,
+                        error: function(){
+                            $("#load-progress > .stl-progress").addClass("failed").text("failed");
+                            $("#load-progress").hide("slide", {easing:"easeInExpo", direction: "left", duration: 400});
+                        },
+                        complete: function() {animation.stop();},
                         data: selectedFile,
                         contentType: fileType,
                         processData: false,
                         cache:false
                     });
+                    $("#load-file-modal").hide("drop", {easing:"easeInExpo", direction: "up", duration: 200 });
+                    $("#upload-dataset-btn").attr("disabled", "disabled");
                 }
-                $("#load-file-modal").hide();
             });
             
             
