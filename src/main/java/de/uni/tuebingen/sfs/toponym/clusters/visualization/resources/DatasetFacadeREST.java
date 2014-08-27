@@ -129,7 +129,7 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
         Deserializer deserializer = CsvIOFactory.createFactory(csvConfiguration, ToponymObject.class).createDeserializer();
         StringReader reader = new StringReader(toponymsAsCsv);
         deserializer.open(reader);
-        Dataset newDataset = new Dataset(super.count(), datasetName);
+        Dataset newDataset = new Dataset(datasetName);
         
         em.getTransaction().begin();
         em.persist(newDataset);

@@ -58,6 +58,10 @@ public class Dataset implements Serializable {
         this.datasetNo = id;
         this.name = name;
     }
+    
+    public Dataset(String name) {
+        this.name = name;
+    }    
 
     public Integer getDatasetNo() {
         return datasetNo;
