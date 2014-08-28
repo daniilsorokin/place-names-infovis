@@ -596,7 +596,27 @@ VIZAPP.gui = function () {
             
             $("#confirm-delete-btn").click(function(){
                 if ($("#delete-dataset-btn").hasClass("selected")){
-                    $("#dataset-btn-list button.selected").hide("slide", {easing:"easeInExpo", direction: "left", duration: 400});
+                    var datasetIdsToDelete = "";
+                    $("#dataset-btn-list button.selected").each(function(){
+                        datasetIdsToDelete += this.id + ",";
+                    });
+                    $.ajax({
+                        url: "request/dataset/delete/",
+                        type: 'POST',
+                        success: function(){
+                            $("#dataset-btn-list button.selected")
+                                    .hide("slide", {easing:"easeInExpo", direction: "left", duration: 400});
+                        },
+                        error: function(){
+                            $("#dataset-btn-list button.selected")
+                                    .removeClass("selected")
+                                    .addClass("alert-grad");
+                        },
+                        data: datasetIdsToDelete,
+                        contentType: "text/plain",
+                        processData: false,
+                        cache:false
+                    });
                 }
             });
 
@@ -661,7 +681,7 @@ VIZAPP.gui = function () {
                         success: refreshDatasetList,
                         error: function(){
                             $("#load-progress > .stl-progress")
-                                    .addClass("alert")
+                                    .addClass("alert-grad")
                                     .css({width: "100%", margin: 0})
                                     .text("failed");
                             setTimeout(function(){

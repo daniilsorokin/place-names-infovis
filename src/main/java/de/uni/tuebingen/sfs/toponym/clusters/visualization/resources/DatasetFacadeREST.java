@@ -4,18 +4,20 @@ import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.Dataset;
 import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.Formant;
 import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.Formant_;
 import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.ToponymObject;
-import de.uni.tuebingen.sfs.toponym.clusters.visualization.services.ToponymVisualizationDataRequestsService;
+import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.ToponymObject_;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.ws.rs.Consumes;
@@ -24,6 +26,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.jsefa.Deserializer;
 import org.jsefa.csv.CsvIOFactory;
@@ -55,6 +58,45 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
     public Dataset find(@PathParam("id") Integer id) {
         return super.find(id);
     }
+
+    @POST
+    @Path("delete")
+    @Consumes("text/plain")
+    public Response deleteDataset(String idsAsString) {
+        String[] stringIds = idsAsString.split(",");
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        for (String stringId : stringIds) {
+            int id = Integer.parseInt(stringId);
+            Dataset dataset = super.find(id);
+            if (dataset == null) {
+                System.err.println(idsAsString);
+                return Response.serverError().build();
+            }
+            em.getTransaction().begin();
+            
+            CriteriaDelete<ToponymObject> cdt = cb.createCriteriaDelete(ToponymObject.class);
+            Root<ToponymObject> roott = cdt.from(ToponymObject.class);
+            cdt.where(cb.equal(roott.get(ToponymObject_.dataset), dataset));
+            em.createQuery(cdt).executeUpdate();
+            
+            CriteriaDelete<Formant> cdf = cb.createCriteriaDelete(Formant.class);
+            Root<Formant> rootf = cdf.from(Formant.class);
+            cdf.where(cb.equal(rootf.get(Formant_.dataset), dataset));
+            em.createQuery(cdf).executeUpdate();
+
+            em.remove(dataset);
+            em.getTransaction().commit();
+            
+//        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+//        CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+//        Root<Formant> root = cq.from(Formant.class);
+//        cq.where(cb.equal(root.get(Formant_.formantName), "ка"));
+//        cq.select(root);
+//        int deletedRows = getEntityManager().createQuery(cq).getResultList().size();
+        }        
+        return Response.ok(idsAsString).build();
+    }
+
     
     @GET
     @Path("{id}/toponymobjects")
@@ -131,7 +173,9 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
         deserializer.open(reader);
         Dataset newDataset = new Dataset(datasetName);
         
-        em.getTransaction().begin();
+        
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
         em.persist(newDataset);
         while (deserializer.hasNext()) {
             ToponymObject t = deserializer.next();
@@ -155,12 +199,11 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
             newDataset.addToponymObjectToList(t);
             em.persist(t);
         }
-        em.getTransaction().commit();
+        tx.commit();
         deserializer.close(true);
         return Response.ok().build();
     }
     
-
     @Override
     protected EntityManager getEntityManager() {
         return em;

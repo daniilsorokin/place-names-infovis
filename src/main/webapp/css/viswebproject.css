@@ -159,8 +159,8 @@ div.mousescroll {
 }
 
 .dataset-btn {
-    width: 100%;
-    height: 30px;
+    width: 180px !important;
+    height: 30px !important;
     
     margin-top: 5px;
     
@@ -204,7 +204,8 @@ div.mousescroll {
 }
 
 .full-alert {
-    width: 400px;
+    width: 400px !important;
+    height: 250px !important;
     
     position: absolute;
     top: 20%;
@@ -278,6 +279,12 @@ div.mousescroll {
     background-color: #00afff;
 /*    box-shadow: inset 0px 1px 1px 0px #c8c8c8;*/
 }
+
+.simple-button.control-on-right{
+    width: 110px !important;
+    height: 30px !important;
+}
+
 .simple-button.selected {
     font-weight: bold;
     
@@ -290,6 +297,7 @@ div.mousescroll {
 
 .simple-block-justified {
     width:100%;
+    
     display: table;
     table-layout: fixed;
     border-collapse: collapse;
@@ -365,7 +373,7 @@ div.mousescroll {
     background: linear-gradient(#00afff, #028ac8); /* Standard syntax */    
 }
 
-.alert {
+.alert-grad {
     color: white;
     background: -webkit-linear-gradient(#fe2a31, #cd0108); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(#fe2a31, #cd0108); /* For Opera 11.1 to 12.0 */
