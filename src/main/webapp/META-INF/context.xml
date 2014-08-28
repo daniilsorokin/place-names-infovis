@@ -1,4 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/toponym-clusters-visualization">
-  <Resource auth="Container" driverClassName="org.postgresql.Driver" maxActive="20" maxIdle="10" maxWait="-1" name="toponymsdb" password="" type="javax.sql.DataSource" url="jdbc:postgresql://localhost:5433/toponymsdb" username="postgres"/>
-</Context>
+<Context antiJARLocking="true" path="/toponym-clusters-visualization"/>

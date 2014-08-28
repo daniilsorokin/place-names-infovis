@@ -574,7 +574,7 @@ VIZAPP.gui = function () {
             $("#delete-dataset-btn").click(function(){
                 if ($(this).hasClass("selected")){
                     $(this).removeClass("selected");
-                    $(this).siblings("button").removeProp("disabled");
+                    $("#upload-dataset-btn").removeAttr("disabled");
                     $("#confirm-delete-btn").hide("drop", {easing:"easeInExpo", direction: "down", duration: 200});
                     $("#dataset-btn-list button")
                             .removeClass("selected")
@@ -584,7 +584,7 @@ VIZAPP.gui = function () {
                             });
                 } else {
                     $(this).addClass("selected");
-                    $(this).siblings("button").attr("disabled", "disabled");
+                    $("#upload-dataset-btn").attr("disabled", "disabled");
                     $("#confirm-delete-btn").show("drop", {easing:"easeOutExpo", direction: "down", duration: 400 });
                     $("#dataset-btn-list button")
                             .off("click")
