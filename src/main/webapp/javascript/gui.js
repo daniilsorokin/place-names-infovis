@@ -572,11 +572,33 @@ VIZAPP.gui = function () {
             refreshDatasetList();
 
             $("#delete-dataset-btn").click(function(){
-                $(this).addClass("selected");
-                $("#dataset-btn-list button").off("click").click(function(){
-                    $(this).toggleClass("selected"); 
-                })
+                if ($(this).hasClass("selected")){
+                    $(this).removeClass("selected");
+                    $(this).siblings("button").removeProp("disabled");
+                    $("#confirm-delete-btn").hide("drop", {easing:"easeInExpo", direction: "down", duration: 200});
+                    $("#dataset-btn-list button")
+                            .removeClass("selected")
+                            .off("click")
+                            .click(function(){
+                                chooseDataset($(this));
+                            });
+                } else {
+                    $(this).addClass("selected");
+                    $(this).siblings("button").attr("disabled", "disabled");
+                    $("#confirm-delete-btn").show("drop", {easing:"easeOutExpo", direction: "down", duration: 400 });
+                    $("#dataset-btn-list button")
+                            .off("click")
+                            .click(function(){
+                                $(this).toggleClass("selected"); 
+                            });
+                }
             }); 
+            
+            $("#confirm-delete-btn").click(function(){
+                if ($("#delete-dataset-btn").hasClass("selected")){
+                    $("#dataset-btn-list button.selected").hide("slide", {easing:"easeInExpo", direction: "left", duration: 400});
+                }
+            });
 
             
             $("#upload-dataset-btn").click(function(){
@@ -589,6 +611,7 @@ VIZAPP.gui = function () {
             
             $("#load-file-modal").hide();
             $("#load-progress").hide();
+            $("#confirm-delete-btn").hide();
            
             $("#select-dataset-file").click(function(){
                 $("#dataset-file").click();
@@ -638,7 +661,7 @@ VIZAPP.gui = function () {
                         success: refreshDatasetList,
                         error: function(){
                             $("#load-progress > .stl-progress")
-                                    .addClass("failed")
+                                    .addClass("alert")
                                     .css({width: "100%", margin: 0})
                                     .text("failed");
                             setTimeout(function(){

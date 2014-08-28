@@ -160,7 +160,7 @@ div.mousescroll {
 
 .dataset-btn {
     width: 100%;
-    height: 24pt;
+    height: 30px;
     
     margin-top: 5px;
     
@@ -241,16 +241,16 @@ div.mousescroll {
 
 
 .simple-button {
+    padding: 5px 7px;
+
     text-align: center;
-    padding: 2px;
-    
     font-size: 11pt;
     
     border: 1px solid #aaaaaa;
     border-radius: 3px;
     background-color: white;
     border-collapse: collapse;
-    box-shadow: 0px 1px 2px 0px #c8c8c8;
+    /*box-shadow: 0px 1px 2px 0px #c8c8c8;*/
     
     /*font-weight: bold;*/
 }
@@ -258,6 +258,12 @@ div.mousescroll {
 .simple-button:active,
 .small-button:active {
     background-color: #eeeeee;
+}
+
+.simple-button:disabled,
+.small-button:disabled {
+    color: #aaaaaa;
+    background-color: #cecece;
 }
 
 .simple-button:focus,
@@ -269,16 +275,17 @@ div.mousescroll {
     font-weight: bold;
     
     color: white;
-    background-color: #028ac8;
+    background-color: #00afff;
+/*    box-shadow: inset 0px 1px 1px 0px #c8c8c8;*/
 }
 .simple-button.selected {
     font-weight: bold;
     
     color: white;
-    background: -webkit-linear-gradient(#00afff, #028ac8); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#00afff, #028ac8); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#00afff, #028ac8); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#00afff, #028ac8); /* Standard syntax */
+    background: -webkit-linear-gradient(#00afff, #1d9efe); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#00afff, #1d9efe); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#00afff, #1d9efe); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#00afff, #1d9efe); /* Standard syntax */
 }
 
 .simple-block-justified {
@@ -301,6 +308,8 @@ div.mousescroll {
 
 .simple-block-justified > .simple-button {
     width: 100%;
+    height: 28px;
+    
     border: 0px;
     border-radius: 0px;
 }
@@ -317,6 +326,7 @@ div.mousescroll {
     display: table;
     
     border: 2px dashed #aaaaaa;
+    border-radius: 3px;
     background-color: white;
     
     font-size: 16px;
@@ -355,10 +365,7 @@ div.mousescroll {
     background: linear-gradient(#00afff, #028ac8); /* Standard syntax */    
 }
 
-.failed {
-    width: 100%;
-    margin: 0px;
-    
+.alert {
     color: white;
     background: -webkit-linear-gradient(#fe2a31, #cd0108); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(#fe2a31, #cd0108); /* For Opera 11.1 to 12.0 */
