@@ -660,8 +660,10 @@ VIZAPP.gui = function () {
                     var datasetName = $("#name-dataset").val();
                     var dataType = $("#data-type-options button.selected").text();
                     $("#load-progress").show("slide", {easing:"easeOutExpo", direction: "left", duration: 400});
-                    $("#load-progress > .stl-progress").css("width", "0%");
-                    $("#load-progress > .stl-progress").text("0");
+                    $("#load-progress > .stl-progress")
+                            .css("width", "0%")
+                            .text("0")
+                            .removeClass("alert-grad");
                     var animation;
                     $.ajax({
                         url: "request/dataset/upload/" + datasetName + "/" + dataType,

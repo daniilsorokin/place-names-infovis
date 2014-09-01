@@ -66,10 +66,10 @@ public class ToponymObject implements Serializable {
     private List<Affix> affixList;
     @JoinColumn(name = "type", referencedColumnName = "type_no")
     @ManyToOne
+    @CsvField(pos = 5)
     private ToponymType type;
     @JoinColumn(name = "language", referencedColumnName = "language_no")
     @ManyToOne
-    @CsvField(pos = 5)
     private Language language;
     @JoinColumn(name = "formant", referencedColumnName = "formant_no")
     @ManyToOne

@@ -17,6 +17,8 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.jsefa.csv.annotation.CsvDataType;
+import org.jsefa.csv.annotation.CsvField;
 
 /**
  *
@@ -24,6 +26,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  */
 @Entity
 @Table(name = "toponym_types")
+@CsvDataType
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ToponymType.findAll", query = "SELECT t FROM ToponymType t"),
@@ -40,6 +43,7 @@ public class ToponymType implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
+    @CsvField(pos = 1)
     private String name;
     @Size(max = 2147483647)
     @Column(name = "name_rus")

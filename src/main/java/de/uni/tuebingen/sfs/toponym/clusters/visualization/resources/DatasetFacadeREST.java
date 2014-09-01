@@ -5,6 +5,8 @@ import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.Formant;
 import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.Formant_;
 import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.ToponymObject;
 import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.ToponymObject_;
+import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.ToponymType;
+import de.uni.tuebingen.sfs.toponym.clusters.visualization.entity.ToponymType_;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,6 +154,17 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
         else return results.get(0);
     }
     
+    private ToponymType getOriginal(ToponymType tt){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        Root<ToponymType> root = cq.from(ToponymType.class);
+        cq.where(cb.equal(root.get(ToponymType_.name), tt.getName()));
+        cq.select(root);
+        List<ToponymType> results = getEntityManager().createQuery(cq).getResultList();
+        if (results.isEmpty()) return null;
+        else return results.get(0);
+    }
+    
     @POST
     @Path("upload/{name}/{type}")
     @Consumes("text/plain")
@@ -180,9 +193,17 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
         while (deserializer.hasNext()) {
             ToponymObject t = deserializer.next();
             Formant f = t.getFormant();
+            Formant fo = null;
+            ToponymType tto = null;
+            
             if (f != null) {
                 f.setDataset(newDataset);
-                Formant fo = getOriginal(f);
+                fo = getOriginal(f);
+            }
+            if (t.getType()!= null) {
+                tto = getOriginal(t.getType());
+            }
+            if (f != null) {
                 if (fo == null){
                     newDataset.addFormantToList(f);
                     em.persist(f);
@@ -192,8 +213,12 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
                     fo.addToponymObjectToList(t);
                 }
             }
-            if (t.getLanguage() != null){
-                em.persist(t.getLanguage());
+            if (t.getType()!= null){
+                if (tto == null){
+                    em.persist(t.getType());
+                } else {
+                    t.setType(tto);
+                }
             }
             t.setDataset(newDataset);
             newDataset.addToponymObjectToList(t);
