@@ -569,6 +569,16 @@ VIZAPP.gui = function () {
             $("#info-window-container .panel").hide();
             
             refreshDatasetList();
+            
+            $("button#back-to-dataset").button().click(function(){
+                $("#select-toponyms-btn").trigger("click");
+                deselectAllInActiveList();
+                $("div#dataset-select-panel").show();
+                $("div#dataset-work-panel").hide("slide", {
+                    easing:"easeInExpo", direction: "left", duration: 200
+                });
+            });
+
 
             $("#delete-dataset-btn").click(function(){
                 if ($(this).hasClass("selected")){
@@ -720,14 +730,7 @@ VIZAPP.gui = function () {
             $("div#dataset-work-panel").hide();
             $("div#dataset-select-panel").hide()
                     .show("slide", {easing:"easeOutExpo", direction: "left", duration: 400 });
-            
-            $("button#back-to-dataset").button().click(function(){
-                    $("div#dataset-select-panel").show();
-                    $("div#dataset-work-panel").hide("slide", {
-                        easing:"easeInExpo", direction: "left", duration: 200
-                    });
-            });
-            
+                        
             $toponymsList.on( "selectablestop", function( event, ui ) {
                 $("li.ui-selected" , this).each(function() { 
                     selectToponym($(this));
@@ -749,14 +752,18 @@ VIZAPP.gui = function () {
                 deselectFormant($(ui.unselected));
             });  
             
+            $("#dataset-select-panel .footer").hide();
             $.ajax({
                 url: "request/storage/get-user/",
                 type: 'GET',
                 success: function(answer){
+                    $("#dataset-select-panel .footer").show();
                     if(answer) {
                         $("#login-info").html(answer);
                         $("#delete-dataset-btn").removeAttr("disabled");
                         $("#upload-dataset-btn").removeAttr("disabled");
+                    } else {
+                        $("#login-info a").attr("href", "/request/storage/login");
                     }
                 }
             });
