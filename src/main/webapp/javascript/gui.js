@@ -468,57 +468,42 @@ VIZAPP.gui = function () {
     };
     
     var displayToponymsInAList = function(toponymObjectArray){
+        var template = $("#toponym-list-template");
         for (var i in toponymObjectArray) {
             var toponym = toponymObjectArray[i];
-            var $toponymHtml = $("<span>")
-                    .text(toponym.name);
-            $("<span>").addClass("glyphicon")
-                    .addClass("glyphicon-chevron-right")
-                    .addClass("pull-right")
-                    .addClass("t-info-trigger")
-                    .click(function(){ showInfo($(this)); })
-                    .appendTo($toponymHtml)
-                    .css('visibility', 'hidden');
-            $("<li>").attr("id", toponym.toponymNo)
+            var $toponym = template.clone();
+            $toponym.children(".name").text(toponym.name);
+            $toponym.attr("id", toponym.toponymNo)
                     .data("formant-id", (toponym.formant !== undefined ? toponym.formant.formantNo : null) )
                     .data("toponym-object", toponym)
-                    .addClass("ui-widget-content")
-                    .html($toponymHtml)
-                    .hover( function(){$(".t-info-trigger", this).css('visibility', 'visible');},
-                            function(){$("span.t-info-trigger:not(.triggered)", this).css('visibility', 'hidden');} )
                     .appendTo("#toponyms-list");
         }
+        $("#toponyms-list .t-info-trigger").click(function(){ showInfo($(this)); });
+        $("#toponyms-list .dynamic-button")
+                .hover( function(){$(".t-info-trigger", this).css('visibility', 'visible');},
+                        function(){$("span.t-info-trigger:not(.triggered)", this).css('visibility', 'hidden');} );
         $("#select-toponyms-btn").prop("disabled", false);
+//        new List("dataset-work-panel", {valueNames: ['name']});
         $(".nano").nanoScroller();
     };
     
     var displayFormantsInAList = function(formantArray){
+        var template = $("#formant-list-template");
         for (var i in formantArray) {
             var formant = formantArray[i];
             var color = colorGenerator.generateNextColor();
-            var $groupHtml = $("<span>").text(formant.formantName);
-            $("<span>").addClass("glyphicon")
-                    .addClass("glyphicon-chevron-right")
-                    .addClass("pull-right")
-                    .addClass("g-info-trigger")
-                    .click(function(){ showInfo($(this)); })
-                    .appendTo($groupHtml)
-                    .css('visibility', 'hidden');
-            $("<span>")
-                    .addClass("small")
-                    .addClass("pull-right")
-                    .addClass("group-badge")
-                    .text(formant.toponymIds.length)
-                    .appendTo($groupHtml);
-            $("<li>").attr("id", formant.formantNo)
+            var $formant = template.clone();
+            $formant.children(".name").text(formant.formantName);
+            $formant.children(".size").text(formant.toponymIds.length);
+            $formant.attr("id", formant.formantNo)
                     .data("formant-object", formant)
                     .data("formant-color", color)
-                    .addClass("ui-widget-content")
-                    .html($groupHtml)
-                    .hover( function(){$(".g-info-trigger",this).css('visibility', 'visible');},
-                            function(){$("span.g-info-trigger:not(.triggered)",this).css('visibility', 'hidden');} )
                     .appendTo("#groups-list");
         }
+        $("#groups-list .g-info-trigger").click(function(){ showInfo($(this)); });
+        $("#groups-list .dynamic-button")
+                .hover( function(){$(".g-info-trigger", this).css('visibility', 'visible');},
+                        function(){$("span.g-info-trigger:not(.triggered)", this).css('visibility', 'hidden');} );
         $("#select-groups-btn").prop("disabled", false);
         $(".nano").nanoScroller();
     };

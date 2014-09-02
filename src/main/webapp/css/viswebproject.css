@@ -381,6 +381,11 @@ div.mousescroll {
     background: linear-gradient(#fe2a31, #cd0108); /* Standard syntax */    
 }
 
+.t-info-trigger,
+.g-info-trigger {
+    visibility: hidden;
+}
+
 /* particular elements (based on id) */
 #list-selector-container { 
     text-align: center;
