@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -97,6 +98,11 @@ public class Dataset implements Serializable {
         this.toponymObjectList = toponymObjectList;
     }
     
+    @XmlElement(name = "toponyms")
+    public int getToponumObjectListSize(){
+        return this.toponymObjectList.size();
+    }
+    
     @XmlTransient
     @JsonIgnore
     public List<Formant> getFormantList() {
@@ -106,6 +112,12 @@ public class Dataset implements Serializable {
     public void setFormantList(List<Formant> formantList) {
         this.formantList = formantList;
     }    
+
+    @XmlElement(name = "formants")
+    public int getFormantListSize(){
+        return this.formantList.size();
+    }
+
     
     public void addToponymObjectToList(ToponymObject t){
         if (this.toponymObjectList == null)
