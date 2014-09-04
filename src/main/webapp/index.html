@@ -12,6 +12,7 @@
         <script type="text/javascript" src="vendor/nanoscroller/jquery.nanoscroller.min.js"></script>
         <script type="text/javascript" src="vendor/kmeans/kmeans.js"></script>
         <script type="text/javascript" src="vendor/list/list.js"></script>
+        <script type="text/javascript" src="vendor/knockout/knockout-3.2.0.js"></script>
         <script type="text/javascript" src="vendor/d3/d3.min.js" charset="utf-8"></script>
         
         <script type="text/javascript" src="javascript/main.js"></script>
@@ -40,7 +41,11 @@
                                 <button id="delete-dataset-btn" class="small-button control-on-right">-</button>
                                 <button id="upload-dataset-btn" class="small-button control-on-right">+</button>
                             </div>
-                            <div id="dataset-btn-list">
+                            <div id="dataset-btn-list" data-bind="foreach: datasets">
+                                <button data-bind="click: goTo" class="simple-button dataset-btn center-block">
+                                    <span data-bind="text: name"></span>
+                                    <span data-bind="text: toponyms" class="pull-right"></span>
+                                </button>
                             </div>
                             <div id="load-progress" class="stl-progress-bar simple-button dataset-btn center-block">
                                 <div class="stl-progress"></div>
@@ -62,8 +67,8 @@
                                             </button>
                                         </td><td style="width: 70%; text-align: center">
                                             <div id="list-selector" class="btn-group btn-group-sm">
-                                                <button id="select-toponyms-btn" type="button" class="btn btn-primary" disabled>Toponyms</button>
-                                                <button id="select-groups-btn" type="button" class="btn btn-primary" disabled>Groups</button>
+                                                <button id="select-toponyms-btn" type="button" class="btn btn-primary" data-bind="enable: toponyms().length > 0">Toponyms</button>
+                                                <button id="select-groups-btn" type="button" class="btn btn-primary" data-bind="enable: formants().length > 0">Groups</button>
                                             </div>
                                         </td><td style="width: 15%"></td>
                                     </tr></table>
@@ -83,7 +88,11 @@
                                     <div id="toponyms-list-container" class="list-holder">
                                         <div class="nano">
                                             <div id="toponyms-list-content" class="content">
-                                                <ul id="toponyms-list" class="list disable-select">
+                                                <ul id="toponyms-list" class="list disable-select" data-bind="foreach: toponyms">
+                                                    <li data-bind="" class="dynamic-button ui-widget-content">
+                                                        <span data-bind="text: name" class="name"></span>
+                                                        <span class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -91,7 +100,13 @@
                                     <div id="groups-list-container" class="list-holder">
                                         <div class="nano">
                                             <div class="content">
-                                                <ul id="groups-list" class="list"></ul>
+                                                <ul id="groups-list" class="list" data-bind="foreach: formants">
+                                                    <li data-bind="" class="dynamic-button ui-widget-content">
+                                                        <span data-bind="text: name" class="name"></span>
+                                                        <span class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
+                                                        <span data-bind="text: size" class="size small pull-right group-badge"></span>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -135,22 +150,6 @@
                                 </dl>
                             </div>
                         </div>
-<!--
-                        <div id="group-info-panel" class="panel panel-default">
-                            <div class="panel-heading">
-                                <button type="button" class="close" aria-hidden="true">&times;</button>
-                                <h4 class="small-margins"><span class="title"></span></br><small></small></h4>
-                            </div>
-                            <div class="panel-body">
-                                <dl class="dl-horizontal info-list">
-                                    <dt>Size</dt>
-                                    <dd class="size"></dd>
-                                    <dt>Toponyms</dt>
-                                    <dd class="toponym-list"></dd>
-                                </dl>
-                            </div>
-                        </div>
--->
                     </div>
                     <div id="map-canvas" style="width:100%; height:100%; margin:0px 0px; padding:0px; z-index: 1"></div>
                 </td>

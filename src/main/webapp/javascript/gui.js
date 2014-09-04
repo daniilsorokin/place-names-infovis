@@ -246,6 +246,65 @@ VIZAPP.objects = function () {
     };
 }();
 
+VIZAPP.model = function () {
+    
+    var Toponym = function(data) {
+        this.name = data.name;
+        this.id = data.toponymNo;
+    };
+
+    var Formant = function(data) {
+        this.name = data.formantName;
+        this.id = data.formantNo;
+        this.size = data.toponymIds.length;
+    };
+    
+    var Dataset = function(data, vm){
+        this.name = data.name;
+        this.id = data.datasetNo;
+        this.toponyms = data.toponyms;
+        
+        this.goTo = function(dataset) {
+            VIZAPP.dataInterface.getDatasetToponyms(dataset.id, function(loadedToponymObjects){
+                vm.toponyms($.map(loadedToponymObjects, function(item){ return new Toponym(item)}));
+                $("#toponyms-list .t-info-trigger").click(function(){ showInfo($(this)); });
+
+                $("div#dataset-work-panel").show("slide", {
+                    easing:"easeOutExpo", direction: "left", duration: 400,
+                    complete: function(){$("div#dataset-select-panel").hide();}
+                });
+                
+                VIZAPP.dataInterface.getDatasetFormants(dataset.id, function(loadedFormants) {
+                    vm.formants($.map(loadedFormants, function(item){ return new Formant(item)}));
+                    
+                    $(".list-container .dynamic-button")
+                            .hover( function(){$(".info-trigger", this).css('visibility', 'visible');},
+                                    function(){$("span.info-trigger:not(.triggered)", this).css('visibility', 'hidden');} );
+
+                });
+            }); 
+        };
+    };
+    
+    
+    var ViewModel = function(){
+        var self = this;
+        self.datasets = ko.observableArray([]);
+        self.toponyms = ko.observableArray([]);
+        self.formants = ko.observableArray([]);
+        
+        VIZAPP.dataInterface.getDatasetList(function(datasetList){
+            self.datasets($.map(datasetList, function(item){ return new Dataset(item, self)}));
+        });
+    };
+    
+    return {
+        createViewModel: function(){
+            return new ViewModel();
+        }
+    };
+}();
+
 VIZAPP.gui = function () {
     var colorGenerator = new ColorGenerator(2.4,2.4,2.4,0,2,4);
     var kmeans = new KMeans(); kmeans.kmpp = true;
@@ -553,7 +612,9 @@ VIZAPP.gui = function () {
             
             $("#info-window-container .panel").hide();
             
-            refreshDatasetList();
+//            refreshDatasetList();
+            
+            ko.applyBindings(VIZAPP.model.createViewModel());
             
             $("button#back-to-dataset").button().click(function(){
                 $("#select-toponyms-btn").trigger("click");
@@ -757,14 +818,3 @@ VIZAPP.gui = function () {
         }
     };
 }();
-
-
-(function( $ ) {
-    /**
-     * 
-     * @returns {Boolean}
-     */
-    $.fn.isHidden = function(){
-        return this.css('display') == 'none';
-    };
-})(jQuery);

@@ -381,8 +381,7 @@ div.mousescroll {
     background: linear-gradient(#fe2a31, #cd0108); /* Standard syntax */    
 }
 
-.t-info-trigger,
-.g-info-trigger {
+.info-trigger {
     visibility: hidden;
 }
 
