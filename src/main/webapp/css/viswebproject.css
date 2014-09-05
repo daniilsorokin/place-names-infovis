@@ -382,7 +382,7 @@ div.mousescroll {
 }
 
 .info-trigger {
-    visibility: hidden;
+    /*visibility: hidden;*/
 }
 
 /* particular elements (based on id) */

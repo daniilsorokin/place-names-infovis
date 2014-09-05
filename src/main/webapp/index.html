@@ -89,9 +89,9 @@
                                         <div class="nano">
                                             <div id="toponyms-list-content" class="content">
                                                 <ul id="toponyms-list" class="list disable-select" data-bind="foreach: toponyms">
-                                                    <li data-bind="" class="dynamic-button ui-widget-content">
+                                                    <li class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
-                                                        <span class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
+                                                        <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -101,9 +101,9 @@
                                         <div class="nano">
                                             <div class="content">
                                                 <ul id="groups-list" class="list" data-bind="foreach: formants">
-                                                    <li data-bind="" class="dynamic-button ui-widget-content">
+                                                    <li class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
-                                                        <span class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
+                                                        <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
                                                         <span data-bind="text: size" class="size small pull-right group-badge"></span>
                                                     </li>
                                                 </ul>
@@ -130,23 +130,27 @@
                     <div id="info-window-container" class="info-window-container">
                         <div id="info-panel" class="panel panel-default">
                             <div class="panel-heading">
-                                <button type="button" class="close" aria-hidden="true">&times;</button>
-                                <h4 class="small-margins"><span class="title"></span></br><small></small></h4>
+                                <button data-bind="click: sideInfoWindow.close" type="button" class="close" aria-hidden="true">&times;</button>
+                                <h4 class="small-margins"><span data-bind="text: sideInfoWindow.name()" class="title"></span></br><small></small></h4>
                             </div>
                             <div class="panel-body">
                                 <dl class="dl-horizontal info-list">
-                                    <dt class="latlng">LatLng</dt>
-                                    <dd class="latlng"></dd>
-                                    <dt class="language">Language</dt>
-                                    <dd class="language"></dd>
-                                    <dt class="type">Type</dt>
-                                    <dd class="type"></dd>
-                                    <dt class="group">Group</dt>
-                                    <dd class="group"><button id="test-button" class="btn btn-default btn-xs"></button></dd>
-                                    <dt class="size">Size</dt>
-                                    <dd class="size"></dd>
-                                    <dt class="toponym-list">Toponyms</dt>
-                                    <dd class="toponym-list small"></dd>                          
+                                    <dt data-bind="visible: sideInfoWindow.latlng()" class="latlng">LatLng</dt>
+                                    <dd data-bind="text: sideInfoWindow.latlng(), visible: sideInfoWindow.latlng()" class="latlng"></dd>
+                                    <dt data-bind="visible: sideInfoWindow.language()" class="language">Language</dt>
+                                    <dd data-bind="text: sideInfoWindow.language(), visible: sideInfoWindow.language()" class="language"></dd>
+                                    <dt data-bind="visible: sideInfoWindow.type()" class="type">Type</dt>
+                                    <dd data-bind="text: sideInfoWindow.type(), visible: sideInfoWindow.type()" class="type"></dd>
+                                    <dt data-bind="visible: sideInfoWindow.group()" class="group">Group</dt>
+                                    <dd data-bind="text: sideInfoWindow.group(), visible: sideInfoWindow.group()" class="group">
+                                        <!--<button id="test-button" class="btn btn-default btn-xs"></button>-->
+                                    </dd>
+                                    <dt data-bind="visible: sideInfoWindow.size()" class="size">Size</dt>
+                                    <dd data-bind="text: sideInfoWindow.size(), visible: sideInfoWindow.size()" class="size"></dd>
+                                    <dt data-bind="visible: sideInfoWindow.toponymlist().length > 0" class="toponym-list">Toponyms</dt>
+                                    <dd data-bind="foreach: sideInfoWindow.toponymlist(), visible: sideInfoWindow.toponymlist().length > 0" class="toponym-list small">
+                                        <button data-bind="text: $data" class="element-info-btn btn btn-default btn-xs"></button>
+                                    </dd>                          
                                 </dl>
                             </div>
                         </div>
