@@ -89,7 +89,7 @@
                                         <div class="nano">
                                             <div id="toponyms-list-content" class="content">
                                                 <ul id="toponyms-list" class="list disable-select" data-bind="foreach: toponyms">
-                                                    <li class="dynamic-button ui-widget-content">
+                                                    <li data-bind="showTriggerOnHover: true" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
                                                     </li>
@@ -101,7 +101,7 @@
                                         <div class="nano">
                                             <div class="content">
                                                 <ul id="groups-list" class="list" data-bind="foreach: formants">
-                                                    <li class="dynamic-button ui-widget-content">
+                                                    <li data-bind="showTriggerOnHover: true" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
                                                         <span data-bind="text: size" class="size small pull-right group-badge"></span>

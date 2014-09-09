@@ -278,16 +278,12 @@ VIZAPP.model = function () {
         this.goTo = function(dataset) {
             VIZAPP.dataInterface.getDatasetToponyms(dataset.id, function(loadedToponymObjects){
                 vm.toponyms($.map(loadedToponymObjects, function(item){ return new Toponym(item)}));
-                $("#toponyms-list .t-info-trigger").click(function(){ showInfo($(this)); });
                 $("#dataset-work-panel").show("slide", {
                     easing:"easeOutExpo", direction: "left", duration: 400,
                     complete: function(){$("#dataset-select-panel").hide();}
                 });
                 VIZAPP.dataInterface.getDatasetFormants(dataset.id, function(loadedFormants) {
                     vm.formants($.map(loadedFormants, function(item){ return new Formant(item)}));
-                    $(".list-container .dynamic-button")
-                            .hover( function(){$(".info-trigger", this).css('visibility', 'visible');},
-                                    function(){$("span.info-trigger:not(.triggered)", this).css('visibility', 'hidden');} );
                 });
             }); 
         };
@@ -295,6 +291,12 @@ VIZAPP.model = function () {
     
     
     var ViewModel = function(){
+        ko.bindingHandlers.showTriggerOnHover = {
+            init: function(element, valueAccessor){
+                $(element).hover( function(){$(".info-trigger", this).css('visibility', 'visible');},
+                                  function(){$(".info-trigger:not(.triggered)", this).css('visibility', 'hidden');} );
+            }
+        };
         ko.bindingHandlers.turnHalfCircle = {
             init: function(element, valueAccessor){
                 $(element).css({visibility: 'visible', opacity: 1});
@@ -365,23 +367,21 @@ VIZAPP.model = function () {
             close: function(){
                 if(self.infoTriggeredElement) self.infoTriggeredElement.infotriggered(false);
                 self.infoTriggeredElement = null;
-                $("#info-panel").hide("slide", { direction: "left", duration: 200,});                
+                $("#info-panel").hide("slide", { direction: "left", duration: 200});                
             }
             
         };
         
         self.showSideInfoWindow = function(infoItem, e) {
-            var $infoWindow = $("#info-panel");
-            if (self.infoTriggeredElement == infoItem) {
+            if (self.infoTriggeredElement === infoItem) {
                 self.sideInfoWindow.close();
                 return;
-            }
-            
+            }            
             if(self.infoTriggeredElement) self.infoTriggeredElement.infotriggered(false);
             infoItem.infotriggered(true);
             self.infoTriggeredElement = infoItem;
             
-            $infoWindow.hide("slide", { 
+            $("#info-panel").hide("slide", { 
                 easing:"easeInExpo", direction: "left", duration: 200,
                 complete: function() {
                     self.sideInfoWindow.name(infoItem.name);
@@ -402,12 +402,10 @@ VIZAPP.model = function () {
                 }
             }).show("slide", {easing:"easeOutExpo", direction: "left", duration: 400 });
         };
-
         
         VIZAPP.dataInterface.getDatasetList(function(datasetList){
             self.datasets($.map(datasetList, function(item){ return new Dataset(item, self)}));
         });
-        
     };
     
     return {
