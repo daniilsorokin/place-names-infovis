@@ -247,27 +247,34 @@ VIZAPP.objects = function () {
 }();
 
 VIZAPP.model = function () {
+    var colorGenerator = new ColorGenerator(2.4,2.4,2.4,0,2,4);
     
     var Toponym = function(data) {
         this.name = data.name;
-        this.id = data.toponymNo;
+        this.toponymNo = data.toponymNo;
         this.latitude = data.latitude;
         this.longitude = data.longitude;
         this.language = data.language;
         this.type = data.type !== undefined ? data.type.name : null;
         this.formantName = data.formant !== undefined ? data.formant.formantName : null;
+        this.formantNo = data.formant !== undefined ? data.formant.formantNo : null;
         this.othernames = data.englishTransliteration;
         
+        this.color = null;
         this.infotriggered = ko.observable(false);
+        this.selected = ko.observable(false);
     };
 
     var Formant = function(data) {
         this.name = data.formantName;
-        this.id = data.formantNo;
+        this.formantNo = data.formantNo;
         this.size = data.toponymIds.length;
-        this.toponymIds = data.toponymIds;
-        
+        this.toponymIds = data.toponymIds instanceof Array ? data.toponymIds : [data.toponymIds];
+
+        this.color = colorGenerator.generateNextColor();
         this.infotriggered = ko.observable(false);
+        this.selected = ko.observable(0);
+        this.polygonData = [];
     };
     
     var Dataset = function(data, vm){
@@ -284,6 +291,7 @@ VIZAPP.model = function () {
                 });
                 VIZAPP.dataInterface.getDatasetFormants(dataset.id, function(loadedFormants) {
                     vm.formants($.map(loadedFormants, function(item){ return new Formant(item)}));
+                    $(".nano").nanoScroller();
                 });
             }); 
         };
@@ -291,6 +299,19 @@ VIZAPP.model = function () {
     
     
     var ViewModel = function(){
+        ko.bindingHandlers.selectableList = {
+            init: function(element, valueAccessor){
+                $(element).selectable({filter:"li", cancel:".info-trigger"});
+                $(element).on( "selectableselected", function( event, ui ) {
+                    var item = ko.dataFor(ui.selected);
+                    valueAccessor().onFunc(item, event);
+                });
+                $(element).on( "selectableunselected", function( event, ui ) {
+                    var item = ko.dataFor(ui.unselected);
+                    valueAccessor().offFunc(item, event);
+                });
+            }
+        };
         ko.bindingHandlers.showTriggerOnHover = {
             init: function(element, valueAccessor){
                 $(element).hover( function(){$(".info-trigger", this).css('visibility', 'visible');},
@@ -315,6 +336,39 @@ VIZAPP.model = function () {
                 });
             }
         };
+        ko.bindingHandlers.showGroupOnMap = {
+            init: function(element, valueAccessor){
+                var item = ko.dataFor(element);
+                var coordinates = $.map(self.getToponymsByIds(item.toponymIds), function(toponym){
+                    if (toponym.latitude !== "0.0")
+                        return {x:parseFloat(toponym.latitude), y:parseFloat(toponym.longitude)};  
+                    else return {};
+                });
+                VIZAPP.gui.computeClusters(coordinates, function(data){
+                    // this should be put somewhere else
+                    for (var i in data) {
+                        var dPoints = new Array();
+                        for (var j in data[i]) {
+                            var aPoint = new google.maps.LatLng(data[i][j][0], data[i][j][1]);
+                            for(var c = 0; c < 360; c += 360 / 6) {
+                                var bPoint = google.maps.geometry.spherical.computeOffset(aPoint, 3000, c)
+                                dPoints.push([bPoint.lat(), bPoint.lng()]);
+                            }
+                        }
+                        data[i] = d3.geom.hull(dPoints);
+                    }        
+                    item.polygonData = data;
+                });
+            },
+            update: function(element, valueAccessor) {
+                var item = ko.dataFor(element);
+                if(valueAccessor()){
+                    VIZAPP.myMap.placePolygon(item, item.polygonData, item.color);
+                } else {
+                    VIZAPP.myMap.hidePolygon(item);
+                }
+            }
+        };        
         
 //        if (typeof callback !== 'function') callback = function(){};
 //        if ($target.hasClass("triggered")){
@@ -337,7 +391,7 @@ VIZAPP.model = function () {
         self.getToponymsByIds = function(ids){
             var rarray = [];
             for(var i in self.toponyms()){
-                if ($.inArray(self.toponyms()[i].id, ids) > -1)
+                if ($.inArray(self.toponyms()[i].toponymNo, ids) > -1)
                     rarray.push(self.toponyms()[i]);
             }
             return rarray;
@@ -346,9 +400,44 @@ VIZAPP.model = function () {
         self.formants = ko.observableArray([]);
         self.getFormantById = function(id){
             for(var i in self.formants())
-                if (self.formants()[i].id === id)
+                if (self.formants()[i].formantNo === id)
                     return self.formants()[i];
             return {};
+        };
+        
+        self.selectToponym = function(item, event){
+            if(!item.selected()){
+                if (item.formantNo !== null){
+                    var group = self.getFormantById(item.formantNo);
+                    group.selected(group.selected() + 1);
+                }
+                if(item.color === null)
+                    if (item.formantNo !== null) item.color = self.getFormantById(item.formantNo).color;
+                else item.color = "#0066CC";
+                item.selected(true);
+                VIZAPP.myMap.placeMarker(item, item.color);
+            }
+        };
+        
+        self.deselectToponym = function(item, event) {
+            if (item.formantNo !== null) {
+                var group = self.getFormantById(item.formantNo);
+                group.selected(group.selected()-1);
+            }
+            item.selected(false);
+            VIZAPP.myMap.hideMarker(item);
+        };
+        
+        self.selectFormant = function(item, event) {
+            $.each(self.getToponymsByIds(item.toponymIds), function(index, toponym){
+                self.selectToponym(toponym);
+            });
+        };
+        
+        self.deselectFormant = function(item, event) {
+            $.each(self.getToponymsByIds(item.toponymIds), function(index, toponym){
+                self.deselectToponym(toponym);
+            });
         };
         
         self.infoTriggeredElement = null;
@@ -524,30 +613,6 @@ VIZAPP.gui = function () {
         var k = ~~(avgDist / 10000);
         k = k === 0 ? 1 : k;
         return k;
-    }
-    
-    var computeClusters = function(coordinates, callback) {
-        kmeans.k = guessK(coordinates);
-        kmeans.setPoints(coordinates);
-        kmeans.initCentroids();
-        kmeans.cluster(function(){
-            var clusters = new Array();
-            for (var i = 0; i < kmeans.points.length; i++) {
-                if (kmeans.points[i].items === undefined){
-                    var centroid = kmeans.points[i].centroid;
-                    if (clusters[centroid] === undefined) {
-                        clusters[centroid] = new Array();
-                    }
-                    clusters[centroid].push(kmeans.points[i]);
-                }
-            }
-            for (var i in clusters) {
-                for (var j in clusters[i]) {
-                    clusters[i][j] = [clusters[i][j].x, clusters[i][j].y];
-                }
-            }
-            callback(clusters);
-        });
     }
 
     var deselectAllInActiveList = function() {
@@ -925,6 +990,29 @@ VIZAPP.gui = function () {
             });
             
             ko.applyBindings(VIZAPP.model.createViewModel());
+        },
+        computeClusters: function(coordinates, callback) {
+            kmeans.k = guessK(coordinates);
+            kmeans.setPoints(coordinates);
+            kmeans.initCentroids();
+            kmeans.cluster(function(){
+                var clusters = new Array();
+                for (var i = 0; i < kmeans.points.length; i++) {
+                    if (kmeans.points[i].items === undefined){
+                        var centroid = kmeans.points[i].centroid;
+                        if (clusters[centroid] === undefined) {
+                            clusters[centroid] = new Array();
+                        }
+                        clusters[centroid].push(kmeans.points[i]);
+                    }
+                }
+                for (var i in clusters) {
+                    for (var j in clusters[i]) {
+                        clusters[i][j] = [clusters[i][j].x, clusters[i][j].y];
+                    }
+                }
+                callback(clusters);
+            });
         }
     };
 }();
