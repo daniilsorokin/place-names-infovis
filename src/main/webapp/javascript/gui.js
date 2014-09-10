@@ -280,7 +280,6 @@ VIZAPP.model = function () {
             toponym.color = self.color;
         });
 
-
         self.selectedTops = ko.computed(function(){
             return $.grep( this.toponyms, function(item){return item.selected();} ).length;
         }, self);
@@ -303,8 +302,10 @@ VIZAPP.model = function () {
                     easing:"easeOutExpo", direction: "left", duration: 400,
                     complete: function(){$("#dataset-select-panel").hide();}
                 });
+                vm.sortListBy(vm.toponyms, vm.tsortHeaders[0], vm.tactiveSort);
                 VIZAPP.dataInterface.getDatasetFormants(dataset.id, function(loadedFormants) {
                     vm.formants($.map(loadedFormants, function(item){ return new Formant(item,vm)}));
+                    vm.sortListBy(vm.formants, vm.fsortHeaders[0], vm.factiveSort);
                     $(".nano").nanoScroller();
                 });
             }); 
@@ -323,7 +324,6 @@ VIZAPP.model = function () {
                 $(element).on( "selectableunselected", function( event, ui ) {
                     var item = ko.dataFor(ui.unselected);
                     item.selected(false);
-//                    valueAccessor().offFunc(item, event);
                 });
             }
         };
@@ -414,6 +414,25 @@ VIZAPP.model = function () {
                 if (self.formants()[i].formantNo === id)
                     return self.formants()[i];
             return {};
+        };
+        
+        self.deselectEverything = function(){
+            $.each(this.formants(), function(index, formant){ formant.selected(false); });
+            $.each(this.toponyms(), function(index, toponym){ toponym.selected(false); });
+        };
+        
+        self.tsortHeaders = [{title:"name", key:"name", asc:true}];
+        self.fsortHeaders = [{title:"name", key:"name", asc:true}, // formants
+                            {title:"size", key:"size", asc:true}];
+        self.tactiveSort = ko.observable(self.tsortHeaders[0]);
+        self.factiveSort = ko.observable(self.fsortHeaders[0]);
+        self.sortListBy = function(list, header, setActiveSort){
+            var value = header.asc ? -1 : 1;
+            list.sort(function(left, right) { 
+                return left[header.key] === right[header.key] ? 0 : (left[header.key] < right[header.key] ? value : -value) ;
+            });
+            setActiveSort(header);
+            header.asc = !header.asc;
         };
         
         self.infoTriggeredElement = null;
@@ -740,13 +759,11 @@ VIZAPP.gui = function () {
 
             var $toponymsList = $("#toponyms-list");
             var $groupsList = $("#groups-list");
-            $(".list").selectable({filter:"li", cancel:".info-trigger,.t-info-trigger,.g-info-trigger"});
+//            $(".list").selectable({filter:"li", cancel:".info-trigger,.t-info-trigger,.g-info-trigger"});
             
             $("#toponyms-list-container").show();
             $("#groups-list-container").hide();
             $activeList = $toponymsList;
-            $("#deselect-button").button().click(deselectAllInActiveList);
-            $("#deselect-button").prop("disabled", false);
 
             $("#select-toponyms-btn").click(function (){
                 $activeList = $toponymsList;

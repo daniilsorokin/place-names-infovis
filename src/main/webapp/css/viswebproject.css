@@ -303,6 +303,10 @@ div.mousescroll {
     border-collapse: collapse;
 }
 
+.simple-block {
+    display: inline;
+}
+
 .simple-block > .simple-button {
     margin-right: 0 !important;
     margin-left: -1px;
@@ -379,6 +383,18 @@ div.mousescroll {
     background: -o-linear-gradient(#fe2a31, #cd0108); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(#fe2a31, #cd0108); /* For Firefox 3.6 to 15 */
     background: linear-gradient(#fe2a31, #cd0108); /* Standard syntax */    
+}
+
+.group-select-progress {
+    height: 100%;
+    width: 30px;
+    
+    position: absolute;
+    top: 0;
+    right: 0;
+    
+    padding: 4pt;
+    color: blue;
 }
 
 .info-trigger {

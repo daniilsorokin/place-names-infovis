@@ -74,23 +74,24 @@
                                     </tr></table>
                                 </td>
                             </tr>
-                            <tr>
+<!--                            <tr>
                                 <td class="left-column">
-                                    <div class="list-control-panel">
-                                        <input class="search form-control control-btn input-sm pull-left" placeholder="Type for search" style="width: 50%; display: inline"/>
-                                        <button class="sort control-btn btn btn-info btn-sm pull-right" data-sort="name"> Sort </button>
-                                        <button id="deselect-button" class="control-btn btn btn-info btn-sm pull-right" disabled><span class="glyphicon glyphicon-ban-circle"></span></button>
-                                    </div>
                                 </td>
-                            </tr>
+                            </tr>-->
                             <tr>
                                 <td class="left-column list-container">
                                     <div id="toponyms-list-container" class="list-holder">
+                                        <div class="list-control-panel">
+                                            <input class="search form-control control-btn input-sm" placeholder="Type for search" style="width: 50%; display: inline"/>
+                                            <div class="simple-block">
+                                                <button data-bind="click: function(d,e){ sortListBy($root.toponyms, $root.tsortHeaders[0], $root.tactiveSort);}, text: tsortHeaders[0].title, css:{selected: tactiveSort() === tsortHeaders[0]}" class="simple-button"></button>
+                                            </div>
+                                            <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button">Un</button>                                            
+                                        </div>
                                         <div class="nano">
                                             <div id="toponyms-list-content" class="content">
                                                 <ul id="toponyms-list" class="list disable-select" data-bind="foreach: toponyms, selectableList: {onFunc: $root.selectToponym, offFunc: $root.deselectToponym}">
-                                                    <li data-bind="showToponymOnMap: selected(), showTriggerOnHover: true, style:{ background: selected() ? color : 'white'}, css:{'ui-selected': selected()}" 
-                                                        class="dynamic-button ui-widget-content">
+                                                    <li data-bind="showToponymOnMap: selected(), showTriggerOnHover: true, style:{ background: selected() ? color : 'white'}, css:{'ui-selected': selected()}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
                                                     </li>
@@ -99,6 +100,14 @@
                                         </div>
                                     </div>
                                     <div id="groups-list-container" class="list-holder">
+                                        <div class="list-control-panel">
+                                            <input class="search form-control control-btn input-sm" placeholder="Type for search" style="width: 30%; display: inline"/>
+                                            <div class="simple-block">
+                                                <button data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[0], $root.factiveSort);}, text: fsortHeaders[0].title, css:{selected: factiveSort() === fsortHeaders[0]}" class="simple-button"></button><button
+                                                    data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[1], $root.factiveSort);}, text: fsortHeaders[1].title, css:{selected: factiveSort() === fsortHeaders[1]}" class="simple-button"></button>
+                                            </div>
+                                            <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button">Un</button>
+                                        </div>
                                         <div class="nano">
                                             <div class="content">
                                                 <ul id="groups-list" class="list disable-select" data-bind="foreach: formants, selectableList: {onFunc: $root.selectFormant, offFunc: $root.deselectFormant}">
@@ -106,6 +115,7 @@
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
                                                         <span data-bind="text: size" class="size small pull-right group-badge"></span>
+                                                        <div class="group-select-progress"></div>
                                                     </li>
                                                 </ul>
                                             </div>
