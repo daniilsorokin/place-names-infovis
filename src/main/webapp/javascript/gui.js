@@ -187,7 +187,9 @@ VIZAPP.myMap = function () {
         },
 
         hideMarker: function (toponym) {
-            markers[toponym.toponymNo].setMap(null)
+            if (markers[toponym.toponymNo] !== undefined) {
+                markers[toponym.toponymNo].setMap(null);
+            }
         },
 
         placePolygon: function (formant, clusters, color){
@@ -259,22 +261,34 @@ VIZAPP.model = function () {
         this.formantName = data.formant !== undefined ? data.formant.formantName : null;
         this.formantNo = data.formant !== undefined ? data.formant.formantNo : null;
         this.othernames = data.englishTransliteration;
-        
-        this.color = null;
+        /* default color */
+        this.color = "#0066CC";
         this.infotriggered = ko.observable(false);
         this.selected = ko.observable(false);
     };
 
-    var Formant = function(data) {
-        this.name = data.formantName;
-        this.formantNo = data.formantNo;
-        this.size = data.toponymIds.length;
-        this.toponymIds = data.toponymIds instanceof Array ? data.toponymIds : [data.toponymIds];
+    var Formant = function(data, vm) {
+        var self = this;
+        self.name = data.formantName;
+        self.formantNo = data.formantNo;
+        self.size = data.toponymIds.length;
+        self.toponymIds = data.toponymIds instanceof Array ? data.toponymIds : [data.toponymIds];
+        self.toponyms = vm.getToponymsByIds(self.toponymIds);
+        self.infotriggered = ko.observable(false);
+        self.color = colorGenerator.generateNextColor();
+        $.each(self.toponyms, function(index, toponym){
+            toponym.color = self.color;
+        });
 
-        this.color = colorGenerator.generateNextColor();
-        this.infotriggered = ko.observable(false);
-        this.selected = ko.observable(0);
-        this.polygonData = [];
+
+        self.selectedTops = ko.computed(function(){
+            return $.grep( this.toponyms, function(item){return item.selected();} ).length;
+        }, self);
+        self.selected = ko.observable(false);
+        self.selected.subscribe(function(newValue, self){
+            $.each(this.toponyms, function(index, toponym){ toponym.selected(newValue); });
+        }, self);
+        self.polygonData = [];
     };
     
     var Dataset = function(data, vm){
@@ -290,7 +304,7 @@ VIZAPP.model = function () {
                     complete: function(){$("#dataset-select-panel").hide();}
                 });
                 VIZAPP.dataInterface.getDatasetFormants(dataset.id, function(loadedFormants) {
-                    vm.formants($.map(loadedFormants, function(item){ return new Formant(item)}));
+                    vm.formants($.map(loadedFormants, function(item){ return new Formant(item,vm)}));
                     $(".nano").nanoScroller();
                 });
             }); 
@@ -304,11 +318,12 @@ VIZAPP.model = function () {
                 $(element).selectable({filter:"li", cancel:".info-trigger"});
                 $(element).on( "selectableselected", function( event, ui ) {
                     var item = ko.dataFor(ui.selected);
-                    valueAccessor().onFunc(item, event);
+                    item.selected(true);
                 });
                 $(element).on( "selectableunselected", function( event, ui ) {
                     var item = ko.dataFor(ui.unselected);
-                    valueAccessor().offFunc(item, event);
+                    item.selected(false);
+//                    valueAccessor().offFunc(item, event);
                 });
             }
         };
@@ -320,7 +335,7 @@ VIZAPP.model = function () {
         };
         ko.bindingHandlers.turnHalfCircle = {
             init: function(element, valueAccessor){
-                $(element).css({visibility: 'visible', opacity: 1});
+                $(element).css({visibility: 'hidden', opacity: 1});
             },
             update: function(element, valueAccessor) {
                 var isTriggered = valueAccessor();
@@ -368,21 +383,17 @@ VIZAPP.model = function () {
                     VIZAPP.myMap.hidePolygon(item);
                 }
             }
-        };        
-        
-//        if (typeof callback !== 'function') callback = function(){};
-//        if ($target.hasClass("triggered")){
-//            $target.removeClass("triggered");
-//            var angle = 0, start = -180;
-//        } else {
-//            $target.addClass("triggered");
-//            var angle = -180, start = 0;
-//        }
-//        $({deg: start}).animate({deg: angle}, {
-//            duration: 200,
-//            step: function(now) { $target.css({transform: 'rotate(' + now + 'deg)'});},
-//            done: function() { callback($target) }
-//        });
+        };
+        ko.bindingHandlers.showToponymOnMap = {
+            update: function(element, valueAccessor) {
+                var item = ko.dataFor(element);
+                if(valueAccessor()){
+                    VIZAPP.myMap.placeMarker(item, item.color);
+                } else {
+                    VIZAPP.myMap.hideMarker(item);
+                }
+            }
+        };
         
         
         var self = this;
@@ -403,41 +414,6 @@ VIZAPP.model = function () {
                 if (self.formants()[i].formantNo === id)
                     return self.formants()[i];
             return {};
-        };
-        
-        self.selectToponym = function(item, event){
-            if(!item.selected()){
-                if (item.formantNo !== null){
-                    var group = self.getFormantById(item.formantNo);
-                    group.selected(group.selected() + 1);
-                }
-                if(item.color === null)
-                    if (item.formantNo !== null) item.color = self.getFormantById(item.formantNo).color;
-                else item.color = "#0066CC";
-                item.selected(true);
-                VIZAPP.myMap.placeMarker(item, item.color);
-            }
-        };
-        
-        self.deselectToponym = function(item, event) {
-            if (item.formantNo !== null) {
-                var group = self.getFormantById(item.formantNo);
-                group.selected(group.selected()-1);
-            }
-            item.selected(false);
-            VIZAPP.myMap.hideMarker(item);
-        };
-        
-        self.selectFormant = function(item, event) {
-            $.each(self.getToponymsByIds(item.toponymIds), function(index, toponym){
-                self.selectToponym(toponym);
-            });
-        };
-        
-        self.deselectFormant = function(item, event) {
-            $.each(self.getToponymsByIds(item.toponymIds), function(index, toponym){
-                self.deselectToponym(toponym);
-            });
         };
         
         self.infoTriggeredElement = null;
