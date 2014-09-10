@@ -62,12 +62,16 @@ div.mousescroll {
 }
 
 .list li { 
-    height: 20pt; 
-    
-    margin: 3px;
+    height: 20pt;
+    margin: 1px 3px;
     padding: 0.4em 10px 0.4em 0.4em;
     
     font-size: 10pt; 
+}
+
+.list li span{
+    z-index: 5;
+    position: relative;
 }
 
 .list .ui-selecting { border-color: #0066CC; }
@@ -149,7 +153,7 @@ div.mousescroll {
     height: 100%;
 
     position: absolute;
-    z-index: 4;
+    z-index: 4; 
     
     background-color: white;
     
@@ -385,20 +389,30 @@ div.mousescroll {
     background: linear-gradient(#fe2a31, #cd0108); /* Standard syntax */    
 }
 
+.dynamic-button{
+    position: relative;
+}
+
 .group-select-progress {
-    height: 100%;
-    width: 30px;
-    
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 0px;
+    left: 0px;
     
-    padding: 4pt;
-    color: blue;
+    height: 100%; 
+    width: 50px;
+    
+    padding: 0;
+    background-color: orange;
+    
+    z-index: 4; 
 }
 
 .info-trigger {
     /*visibility: hidden;*/
+}
+
+.pane {
+    z-index: 10;
 }
 
 /* particular elements (based on id) */

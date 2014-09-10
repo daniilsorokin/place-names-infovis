@@ -112,10 +112,11 @@
                                             <div class="content">
                                                 <ul id="groups-list" class="list disable-select" data-bind="foreach: formants, selectableList: {onFunc: $root.selectFormant, offFunc: $root.deselectFormant}">
                                                     <li data-bind="showGroupOnMap: selectedTops() === size, showTriggerOnHover: true, style:{ background: selectedTops() === size ? color : 'white'}, css:{'ui-selected': selectedTops() === size}" class="dynamic-button ui-widget-content">
+                                                        
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
                                                         <span data-bind="text: size" class="size small pull-right group-badge"></span>
-                                                        <div class="group-select-progress"></div>
+                                                        <div data-bind="style: {width: (selectedTops() / size) * 100 + '%', background: color}, visibile: selectedTops() > 0 && selectedTops() < size" class="group-select-progress"></div>
                                                     </li>
                                                 </ul>
                                             </div>
