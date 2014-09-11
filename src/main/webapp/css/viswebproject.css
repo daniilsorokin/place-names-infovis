@@ -396,6 +396,7 @@ div.mousescroll {
     
     font-size: 10pt;
     cursor: default;
+    overflow: hidden;
 }
 
 .dynamic-button.selected {
@@ -406,7 +407,7 @@ div.mousescroll {
 .dynamic-button .group-select-progress {
     position: absolute;
     top: 0px;
-    right: 0px;
+    left: 0px;
     
     height: 100%; 
     width: 50px;

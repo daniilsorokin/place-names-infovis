@@ -84,7 +84,7 @@
                                         <div class="list-control-panel">
                                             <input class="search form-control control-btn input-sm" placeholder="Type for search" style="width: 50%; display: inline"/>
                                             <div class="simple-block">
-                                                <button data-bind="click: function(d,e){ sortListBy($root.toponyms, $root.tsortHeaders[0], $root.tactiveSort);}, text: tsortHeaders[0].title, css:{selected: tactiveSort() === tsortHeaders[0]}" class="simple-button"></button>
+                                                <button data-bind="click: function(d,e){ sortListBy($root.toponyms, $root.tsortHeaders[0], $root.tactiveSort);}, text: (tsortHeaders[0].asc() ? tsortHeaders[0].titleasc : tsortHeaders[0].titledes), css:{selected: tactiveSort() === tsortHeaders[0]}" class="simple-button"></button>
                                             </div>
                                             <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button">Un</button>                                            
                                         </div>
@@ -104,8 +104,8 @@
                                         <div class="list-control-panel">
                                             <input class="search form-control control-btn input-sm" placeholder="Type for search" style="width: 30%; display: inline"/>
                                             <div class="simple-block">
-                                                <button data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[0], $root.factiveSort);}, text: fsortHeaders[0].title, css:{selected: factiveSort() === fsortHeaders[0]}" class="simple-button"></button><button
-                                                    data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[1], $root.factiveSort);}, text: fsortHeaders[1].title, css:{selected: factiveSort() === fsortHeaders[1]}" class="simple-button"></button>
+                                                <button data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[0], $root.factiveSort);}, text: (fsortHeaders[0].asc() ? fsortHeaders[0].titleasc : fsortHeaders[0].titledes), css:{selected: factiveSort() === fsortHeaders[0]}" class="simple-button"></button><button
+                                                    data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[1], $root.factiveSort);}, text: (fsortHeaders[1].asc() ? fsortHeaders[1].titleasc : fsortHeaders[1].titledes), css:{selected: factiveSort() === fsortHeaders[1]}" class="simple-button"></button>
                                             </div>
                                             <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button">Un</button>
                                         </div>

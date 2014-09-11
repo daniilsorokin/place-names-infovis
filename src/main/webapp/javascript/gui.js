@@ -421,18 +421,18 @@ VIZAPP.model = function () {
             $.each(this.toponyms(), function(index, toponym){ toponym.selected(false); });
         };
         
-        self.tsortHeaders = [{title:"name", key:"name", asc:true}];
-        self.fsortHeaders = [{title:"name", key:"name", asc:true}, // formants
-                            {title:"size", key:"size", asc:true}];
+        self.tsortHeaders = [{titleasc:"a-z", titledes:"z-a", key:"name", asc:ko.observable(true)}];
+        self.fsortHeaders = [{titleasc:"a-z", titledes:"z-a", key:"name", asc:ko.observable(true)}, // formants
+                            {titleasc:"0-9", titledes:"9-0", key:"size", asc:ko.observable(true)}];
         self.tactiveSort = ko.observable(self.tsortHeaders[0]);
         self.factiveSort = ko.observable(self.fsortHeaders[0]);
         self.sortListBy = function(list, header, setActiveSort){
-            var value = header.asc ? -1 : 1;
+            var value = header.asc() ? -1 : 1;
             list.sort(function(left, right) { 
                 return left[header.key] === right[header.key] ? 0 : (left[header.key] < right[header.key] ? value : -value) ;
             });
             setActiveSort(header);
-            header.asc = !header.asc;
+            header.asc(!header.asc());
         };
         
         self.infoTriggeredElement = null;
