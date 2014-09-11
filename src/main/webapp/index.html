@@ -37,9 +37,9 @@
                     <div id="dataset-select-panel" class="sliding-panel left-column">
                         <div class="wrapper">
                             <h3>Select a dataset</h3>
-                            <div>
-                                <button id="delete-dataset-btn" class="small-button control-on-right">-</button>
-                                <button id="upload-dataset-btn" class="small-button control-on-right">+</button>
+                            <div class="dataset-control-panel">
+                                <button id="upload-dataset-btn" class="small-button">+</button>
+                                <button id="delete-dataset-btn" class="small-button">-</button>
                             </div>
                             <div id="dataset-btn-list" data-bind="foreach: datasets">
                                 <button data-bind="click: goTo" class="simple-button dataset-btn center-block">

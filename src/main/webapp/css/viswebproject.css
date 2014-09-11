@@ -44,7 +44,7 @@ div.mousescroll {
     user-select:none
 }
 
-.nano {height: auto; top: 40px; bottom: 0px; width:100%; position: absolute}
+.nano {height: auto; top: 41px; bottom: 0px; width:100%; position: absolute}
 .nano .pane   { background: #888; z-index: 10;}
 .nano .slider { background: #111; }
 
@@ -62,9 +62,9 @@ div.mousescroll {
 }
 
 .list li { 
-    height: 20pt;
+    /*height: 25px;*/
     margin: 1px 3px;
-    padding: 0.4em 10px 0.4em 0.4em;
+    padding: 5px 10px 5px 5px;
 }
 
 .list li span{
@@ -90,6 +90,13 @@ div.mousescroll {
     display: table-cell;
     
     border-bottom: 1px solid #cecece;
+}
+
+.dataset-control-panel {
+    width: 100%;
+    padding: 2px;
+
+    text-align: right;
 }
 
 .control-panel-container {
@@ -235,10 +242,12 @@ div.mousescroll {
     min-width: 25px;
     height: 25px;
     
+    padding: 1px 6px;
+    
     text-align: center;
-    font-size: 10pt;
+    font-size: 9pt;
     vertical-align: middle;
-    display: table;
+    display: inline-table;
     
     border: 1px solid #aaaaaa;
     border-radius: 25px;
@@ -251,11 +260,12 @@ div.mousescroll {
 .simple-button {
     height: 30px;
     
-    padding: 4px 6px;
+    padding: 4px 7px;
 
     text-align: center;
-    font-size: 11pt;
+    font-size: 10pt;
     vertical-align: middle;
+    display: inline;
     
     border: 1px solid #aaaaaa;
     border-radius: 3px;
