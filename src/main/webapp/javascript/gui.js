@@ -271,8 +271,8 @@ VIZAPP.model = function () {
         var self = this;
         self.name = data.formantName;
         self.formantNo = data.formantNo;
-        self.size = data.toponymIds.length;
         self.toponymIds = data.toponymIds instanceof Array ? data.toponymIds : [data.toponymIds];
+        self.size = self.toponymIds.length;
         self.toponyms = vm.getToponymsByIds(self.toponymIds);
         self.infotriggered = ko.observable(false);
         self.color = colorGenerator.generateNextColor();
@@ -284,6 +284,7 @@ VIZAPP.model = function () {
             return $.grep( this.toponyms, function(item){return item.selected();} ).length;
         }, self);
         self.selected = ko.observable(false);
+        self.selected.extend({ notify: 'always' });
         self.selected.subscribe(function(newValue, self){
             $.each(this.toponyms, function(index, toponym){ toponym.selected(newValue); });
         }, self);
@@ -355,9 +356,9 @@ VIZAPP.model = function () {
             init: function(element, valueAccessor){
                 var item = ko.dataFor(element);
                 var coordinates = $.map(self.getToponymsByIds(item.toponymIds), function(toponym){
-                    if (toponym.latitude !== "0.0")
+                    if (toponym.latitude && toponym.latitude !== "0.0")
                         return {x:parseFloat(toponym.latitude), y:parseFloat(toponym.longitude)};  
-                    else return {};
+                    else return;
                 });
                 VIZAPP.gui.computeClusters(coordinates, function(data){
                     // this should be put somewhere else
