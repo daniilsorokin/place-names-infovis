@@ -187,7 +187,7 @@ VIZAPP.myMap = function () {
         },
 
         hideMarker: function (toponym) {
-            if (markers[toponym.toponymNo] !== undefined) {
+            if (markers[toponym.toponymNo]) {
                 markers[toponym.toponymNo].setMap(null);
             }
         },
@@ -223,7 +223,7 @@ VIZAPP.myMap = function () {
         },
 
         hidePolygon:  function (formant) {
-            if (formant != undefined && polygons[formant.formantNo] !== undefined)
+            if (formant && polygons[formant.formantNo])
                 polygons[formant.formantNo].setMap(null);
         },
     };
@@ -989,7 +989,7 @@ VIZAPP.gui = function () {
             kmeans.setPoints(coordinates);
             kmeans.initCentroids();
             kmeans.cluster(function(){
-                var clusters = new Array();
+                var clusters = {};
                 for (var i = 0; i < kmeans.points.length; i++) {
                     if (kmeans.points[i].items === undefined){
                         var centroid = kmeans.points[i].centroid;
@@ -999,12 +999,14 @@ VIZAPP.gui = function () {
                         clusters[centroid].push(kmeans.points[i]);
                     }
                 }
+                var clustersArray = [];
                 for (var i in clusters) {
                     for (var j in clusters[i]) {
                         clusters[i][j] = [clusters[i][j].x, clusters[i][j].y];
                     }
+                    clustersArray.push(clusters[i]);
                 }
-                callback(clusters);
+                callback(clustersArray);
             });
         }
     };
