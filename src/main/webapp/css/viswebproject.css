@@ -394,7 +394,13 @@ div.mousescroll {
 .dynamic-button {
     position: relative;
     
-    font-size: 10pt; 
+    font-size: 10pt;
+    cursor: default;
+}
+
+.dynamic-button.selected {
+    font-weight: bold;
+    color: white;
 }
 
 .dynamic-button .group-select-progress {
@@ -407,6 +413,7 @@ div.mousescroll {
     
     padding: 0;
     background-color: orange;
+    opacity: 0.5;
     
     z-index: 4; 
 }
@@ -418,6 +425,7 @@ div.mousescroll {
 
 .info-trigger {
     /*visibility: hidden;*/
+    cursor: pointer;
 }
 
 /* particular elements (based on id) */

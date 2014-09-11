@@ -91,9 +91,9 @@
                                         <div class="nano">
                                             <div id="toponyms-list-content" class="content">
                                                 <ul id="toponyms-list" class="list disable-select" data-bind="foreach: toponyms, selectableList: {onFunc: $root.selectToponym, offFunc: $root.deselectToponym}">
-                                                    <li data-bind="showToponymOnMap: selected(), showTriggerOnHover: true, style:{ background: selected() ? color : 'white'}, css:{'ui-selected': selected()}" class="dynamic-button ui-widget-content">
+                                                    <li data-bind="showToponymOnMap: selected(), showTriggerOnHover: true, style:{ background: selected() ? color : 'white'}, css:{'ui-selected selected': selected()}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
-                                                        <span data-bind="visible: !latitude " class="no-data-alert">No location</span>
+                                                        <span data-bind="visible: !latitude" class="no-data-alert">No location</span>
                                                         <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
                                                     </li>
                                                 </ul>
@@ -112,7 +112,7 @@
                                         <div class="nano">
                                             <div class="content">
                                                 <ul id="groups-list" class="list disable-select" data-bind="foreach: formants, selectableList: {onFunc: $root.selectFormant, offFunc: $root.deselectFormant}">
-                                                    <li data-bind="showGroupOnMap: selectedTops() === size, showTriggerOnHover: true, style:{ background: selectedTops() === size ? color : 'white'}, css:{'ui-selected': selectedTops() === size}" class="dynamic-button ui-widget-content">
+                                                    <li data-bind="showGroupOnMap: selectedTops() === size, showTriggerOnHover: true, style:{ background: selectedTops() === size ? color : 'white'}, css:{'ui-selected selected': selectedTops() === size}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
                                                         <span data-bind="text: size" class="size small pull-right group-badge"></span>
