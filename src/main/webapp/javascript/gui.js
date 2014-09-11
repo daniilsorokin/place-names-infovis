@@ -396,7 +396,6 @@ VIZAPP.model = function () {
             }
         };
         
-        
         var self = this;
         self.datasets = ko.observableArray([]);
         self.toponyms = ko.observableArray([]);

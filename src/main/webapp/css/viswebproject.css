@@ -65,8 +65,6 @@ div.mousescroll {
     height: 20pt;
     margin: 1px 3px;
     padding: 0.4em 10px 0.4em 0.4em;
-    
-    font-size: 10pt; 
 }
 
 .list li span{
@@ -393,11 +391,13 @@ div.mousescroll {
     background: linear-gradient(#fe2a31, #cd0108); /* Standard syntax */    
 }
 
-.dynamic-button{
+.dynamic-button {
     position: relative;
+    
+    font-size: 10pt; 
 }
 
-.group-select-progress {
+.dynamic-button .group-select-progress {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -409,6 +409,11 @@ div.mousescroll {
     background-color: orange;
     
     z-index: 4; 
+}
+
+.dynamic-button .no-data-alert {
+    color: red;
+    font-size: 7pt; 
 }
 
 .info-trigger {
