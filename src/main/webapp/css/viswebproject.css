@@ -99,6 +99,17 @@ div.mousescroll {
     text-align: right;
 }
 
+.list-selector {
+    display: inline;
+    opacity: 0.5;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.list-selector.selected {
+    opacity: 1.0;
+}
+
 .control-panel-container {
 }
 
@@ -382,6 +393,13 @@ div.mousescroll {
     vertical-align: middle;
 }
 
+.input-block {
+    position: relative;
+    display: inline-block;
+    
+    vertical-align: middle;
+}
+
 .input-text {
     padding: 5px 5px;
     
@@ -392,12 +410,30 @@ div.mousescroll {
     height: 30px;
     display: inline;
         
-    padding: 2px 5px;
+    padding: 2px 20px 2px 5px;
     font-size: 10pt;
     
     background-color: white;
     border: 1px solid #aaaaaa;
     border-radius: 3px;
+}
+
+.clear-input {
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    top: 8px;
+    right: 6px;
+    
+    text-align: center;
+    font-size: 8pt;
+    
+    border-radius: 14px;
+    border: none;
+    background-color: #aaaaaa;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 
@@ -423,7 +459,7 @@ div.mousescroll {
 }
 
 .alert-grad {
-    color: white;
+    color: white;    
     background: -webkit-linear-gradient(#fe2a31, #cd0108); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(#fe2a31, #cd0108); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(#fe2a31, #cd0108); /* For Firefox 3.6 to 15 */

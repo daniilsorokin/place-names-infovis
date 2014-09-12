@@ -11,7 +11,6 @@
         
         <script type="text/javascript" src="vendor/nanoscroller/jquery.nanoscroller.min.js"></script>
         <script type="text/javascript" src="vendor/kmeans/kmeans.js"></script>
-        <script type="text/javascript" src="vendor/list/list.js"></script>
         <script type="text/javascript" src="vendor/knockout/knockout-3.2.0.js"></script>
         <script type="text/javascript" src="vendor/d3/d3.min.js" charset="utf-8"></script>
         
@@ -62,15 +61,15 @@
                                 <td id="list-selector-container" class="left-column">
                                     <table style="width: 100%;"><tr>
                                         <td style="width: 15%; padding: 2px">
-                                            <button id="back-to-dataset" class="control-btn btn btn-default btn-sm">
-                                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                            <button id="back-to-dataset" class="simple-button">
+                                                Back
                                             </button>
-                                        </td><td style="width: 70%; text-align: center">
-                                            <div id="list-selector" class="btn-group btn-group-sm">
-                                                <button id="select-toponyms-btn" type="button" class="btn btn-primary" data-bind="enable: toponyms().length > 0">Toponyms</button>
-                                                <button id="select-groups-btn" type="button" class="btn btn-primary" data-bind="enable: formants().length > 0">Groups</button>
+                                        </td><td style="width: 80%; text-align: center">
+                                            <div id="list-selector">
+                                                <h4 id="select-toponyms-btn" class="list-selector selected" data-bind="enable: toponyms().length > 0">Toponyms</h4>
+                                                <h4 id="select-groups-btn" class="list-selector" data-bind="enable: formants().length > 0">Groups</h4>
                                             </div>
-                                        </td><td style="width: 15%"></td>
+                                        </td><td style="width: 5%"></td>
                                     </tr></table>
                                 </td>
                             </tr>
@@ -82,7 +81,10 @@
                                 <td class="left-column list-container">
                                     <div id="toponyms-list-container" class="list-holder">
                                         <div class="list-control-panel">
-                                            <input class="input-text-sm" placeholder="Type for search" style="width: 50%"/>
+                                            <div class="input-block" style="width: 50%" >
+                                                <input class="input-text-sm" data-bind="value: tFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 100%"  />
+                                                <span data-bind="click: function(){ tFilter(''); }, visible: tFilter() != ''" class="clear-input">x</span>
+                                            </div>
                                             <div class="simple-block">
                                                 <button data-bind="click: function(d,e){ sortListBy($root.toponyms, $root.tsortHeaders[0], $root.tactiveSort);}, text: (tsortHeaders[0].asc() ? tsortHeaders[0].titleasc : tsortHeaders[0].titledes), css:{selected: tactiveSort() === tsortHeaders[0]}" class="simple-button"></button>
                                             </div>
@@ -91,7 +93,7 @@
                                         <div class="nano">
                                             <div id="toponyms-list-content" class="content">
                                                 <ul id="toponyms-list" class="list disable-select" data-bind="foreach: toponyms, selectableList: {onFunc: $root.selectToponym, offFunc: $root.deselectToponym}">
-                                                    <li data-bind="showToponymOnMap: selected(), showTriggerOnHover: true, style:{ background: selected() ? color : 'white'}, css:{'ui-selected selected': selected()}" class="dynamic-button ui-widget-content">
+                                                    <li data-bind="visible: $root.matchFilter($root.tFilter(), name), showToponymOnMap: selected(), showTriggerOnHover: true, style:{ background: selected() ? color : 'white'}, css:{'ui-selected selected': selected()}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="visible: !latitude" class="no-data-alert">No location</span>
                                                         <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
@@ -102,7 +104,10 @@
                                     </div>
                                     <div id="groups-list-container" class="list-holder">
                                         <div class="list-control-panel">
-                                            <input class="input-text-sm" placeholder="Type for search" style="width: 40%"/>
+                                            <div class="input-block" style="width: 40%" >
+                                                <input class="input-text-sm" data-bind="value: fFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 100%"  />
+                                                <span data-bind="click: function(){ fFilter(''); }, visible: fFilter() != ''" class="clear-input">x</span>
+                                            </div>
                                             <div class="simple-block">
                                                 <button data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[0], $root.factiveSort);}, text: (fsortHeaders[0].asc() ? fsortHeaders[0].titleasc : fsortHeaders[0].titledes), css:{selected: factiveSort() === fsortHeaders[0]}" class="simple-button"></button><button
                                                     data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[1], $root.factiveSort);}, text: (fsortHeaders[1].asc() ? fsortHeaders[1].titleasc : fsortHeaders[1].titledes), css:{selected: factiveSort() === fsortHeaders[1]}" class="simple-button"></button>
@@ -112,7 +117,7 @@
                                         <div class="nano">
                                             <div class="content">
                                                 <ul id="groups-list" class="list disable-select" data-bind="foreach: formants, selectableList: {onFunc: $root.selectFormant, offFunc: $root.deselectFormant}">
-                                                    <li data-bind="showGroupOnMap: selectedTops() === size, showTriggerOnHover: true, style:{ background: selectedTops() === size ? color : 'white'}, css:{'ui-selected selected': selectedTops() === size}" class="dynamic-button ui-widget-content">
+                                                    <li data-bind="visible: $root.matchFilter($root.fFilter(), name), showGroupOnMap: selectedTops() === size, showTriggerOnHover: true, style:{ background: selectedTops() === size ? color : 'white'}, css:{'ui-selected selected': selectedTops() === size}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
                                                         <span data-bind="text: size" class="size small pull-right group-badge"></span>

@@ -415,6 +415,14 @@ VIZAPP.model = function () {
                     return self.formants()[i];
             return {};
         };
+        self.tFilter = ko.observable('');
+        self.fFilter = ko.observable('');
+
+        
+        self.matchFilter = function(filter, value){
+            if ( !filter ) return true;
+            return value.slice(0, filter.length).toLowerCase() == filter.toLowerCase();
+        }
         
         self.deselectEverything = function(){
             $.each(this.formants(), function(index, formant){ formant.selected(false); });
@@ -767,12 +775,16 @@ VIZAPP.gui = function () {
 
             $("#select-toponyms-btn").click(function (){
                 $activeList = $toponymsList;
+                $("#select-toponyms-btn").addClass("selected");
+                $("#select-groups-btn").removeClass("selected");
                 $("#toponyms-list-container").show('slide',{ direction: "left" });
                 $("#groups-list-container").hide('slide', { direction: "right" });
                 $(".nano").nanoScroller();
             });
             $("#select-groups-btn").click(function (){
                 $activeList = $groupsList;
+                $("#select-toponyms-btn").removeClass("selected");
+                $("#select-groups-btn").addClass("selected");
                 $("#groups-list-container").show('slide',{ direction: "right" });
                 $("#toponyms-list-container").hide('slide', { direction: "left" });
                 $(".nano").nanoScroller();
