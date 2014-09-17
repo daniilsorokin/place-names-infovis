@@ -291,30 +291,18 @@ VIZAPP.model = function () {
         self.polygonData = [];
     };
     
-    var Dataset = function(data, vm){
+    var Dataset = function(data){
         this.name = data.name;
         this.id = data.datasetNo;
         this.toponyms = data.toponyms;
-        
-        this.goTo = function(dataset) {
-            VIZAPP.dataInterface.getDatasetToponyms(dataset.id, function(loadedToponymObjects){
-                vm.toponyms($.map(loadedToponymObjects, function(item){ return new Toponym(item)}));
-                $("#dataset-work-panel").show("slide", {
-                    easing:"easeOutExpo", direction: "left", duration: 400,
-                    complete: function(){$("#dataset-select-panel").hide();}
-                });
-                vm.sortListBy(vm.toponyms, vm.tsortHeaders[0], vm.tactiveSort);
-                VIZAPP.dataInterface.getDatasetFormants(dataset.id, function(loadedFormants) {
-                    vm.formants($.map(loadedFormants, function(item){ return new Formant(item,vm)}));
-                    vm.sortListBy(vm.formants, vm.fsortHeaders[0], vm.factiveSort);
-                    $(".nano").nanoScroller();
-                });
-            }); 
-        };
     };
     
     
     var ViewModel = function(){
+        if ( arguments.callee._singletonInstance )
+            return arguments.callee._singletonInstance;
+        arguments.callee._singletonInstance = this;
+        
         ko.bindingHandlers.selectableList = {
             init: function(element, valueAccessor){
                 $(element).selectable({filter:"li", cancel:".info-trigger"});
@@ -495,14 +483,42 @@ VIZAPP.model = function () {
             }).show("slide", {easing:"easeOutExpo", direction: "left", duration: 400 });
         };
         
-        VIZAPP.dataInterface.getDatasetList(function(datasetList){
-            self.datasets($.map(datasetList, function(item){ return new Dataset(item, self)}));
-        });
+        self.refreshDatasetList = function(){
+            VIZAPP.dataInterface.getDatasetList(function(datasetList){
+                self.datasets($.map(datasetList, function(item){ return new Dataset(item, self)}));
+            });
+        };
+        
+        self.clickDataset = function(dataset, e){
+            if($("#delete-dataset-btn").hasClass("selected")){
+                $(e.target).toggleClass("selected"); 
+            } else {
+                self.goTo(dataset);
+            }
+        };
+        
+        self.goTo = function(dataset) {
+            VIZAPP.dataInterface.getDatasetToponyms(dataset.id, function(loadedToponymObjects){
+                self.toponyms($.map(loadedToponymObjects, function(item){ return new Toponym(item)}));
+                $("#dataset-work-panel").show("slide", {
+                    easing:"easeOutExpo", direction: "left", duration: 400,
+                    complete: function(){$("#dataset-select-panel").hide();}
+                });
+                self.sortListBy(self.toponyms, self.tsortHeaders[0], self.tactiveSort);
+                VIZAPP.dataInterface.getDatasetFormants(dataset.id, function(loadedFormants) {
+                    self.formants($.map(loadedFormants, function(item){ return new Formant(item,self)}));
+                    self.sortListBy(self.formants, self.fsortHeaders[0], self.factiveSort);
+                    $(".nano").nanoScroller();
+                });
+            }); 
+        };
+        
     };
     
+    new ViewModel();
     return {
-        createViewModel: function(){
-            return new ViewModel();
+        getViewModel: function(){
+            return ViewModel();
         }
     };
 }();
@@ -809,21 +825,11 @@ VIZAPP.gui = function () {
                     $(this).removeClass("selected");
                     $("#upload-dataset-btn").removeAttr("disabled");
                     $("#confirm-delete-btn").hide("drop", {easing:"easeInExpo", direction: "down", duration: 200});
-                    $("#dataset-btn-list button")
-                            .removeClass("selected")
-                            .off("click")
-                            .click(function(){
-                                chooseDataset($(this));
-                            });
+                    $("#dataset-btn-list button").removeClass("selected");
                 } else {
                     $(this).addClass("selected");
                     $("#upload-dataset-btn").attr("disabled", "disabled");
                     $("#confirm-delete-btn").show("drop", {easing:"easeOutExpo", direction: "down", duration: 400 });
-                    $("#dataset-btn-list button")
-                            .off("click")
-                            .click(function(){
-                                $(this).toggleClass("selected"); 
-                            });
                 }
             }); 
             
@@ -831,7 +837,8 @@ VIZAPP.gui = function () {
                 if ($("#delete-dataset-btn").hasClass("selected")){
                     var datasetIdsToDelete = "";
                     $("#dataset-btn-list button.selected").each(function(){
-                        datasetIdsToDelete += this.id + ",";
+                        var item = ko.dataFor(this);
+                        datasetIdsToDelete += item.id + ",";
                     });
                     $.ajax({
                         url: "request/dataset/delete/",
@@ -916,7 +923,7 @@ VIZAPP.gui = function () {
                             }
                             return myXhr;
                         },
-                        success: refreshDatasetList,
+                        success: VIZAPP.model.getViewModel().refreshDatasetList,
                         error: function(){
                             $("#load-progress > .stl-progress")
                                     .addClass("alert-grad")
@@ -994,7 +1001,8 @@ VIZAPP.gui = function () {
                 }
             });
             
-            ko.applyBindings(VIZAPP.model.createViewModel());
+            ko.applyBindings(VIZAPP.model.getViewModel());
+            VIZAPP.model.getViewModel().refreshDatasetList();
         },
         computeClusters: function(coordinates, callback) {
             kmeans.k = guessK(coordinates);

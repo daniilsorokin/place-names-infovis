@@ -41,7 +41,7 @@
                                 <button id="delete-dataset-btn" class="small-button">-</button>
                             </div>
                             <div id="dataset-btn-list" data-bind="foreach: datasets">
-                                <button data-bind="click: goTo" class="simple-button dataset-btn center-block">
+                                <button data-bind="click: $root.clickDataset" class="simple-button dataset-btn center-block">
                                     <span data-bind="text: name"></span>
                                     <span data-bind="text: toponyms" class="pull-right"></span>
                                 </button>
