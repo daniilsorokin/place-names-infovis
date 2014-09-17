@@ -186,17 +186,23 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
         deserializer.open(reader);
         Dataset newDataset = new Dataset(datasetName);
         
-        
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         em.persist(newDataset);
         while (deserializer.hasNext()) {
             ToponymObject t = deserializer.next();
             Formant f = t.getFormant();
+            Formant fo = null;
+            ToponymType tto = null;
 
             if (f != null) {
                 f.setDataset(newDataset);
-                Formant fo = getOriginal(f);
+                fo = getOriginal(f);
+            }
+            if (t.getType()!= null) {
+                tto = getOriginal(t.getType());
+            }
+            if (f != null) {
                 if (fo == null){
                     newDataset.addFormantToList(f);
                     em.persist(f);
@@ -208,7 +214,6 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
             }
 
             if (t.getType()!= null){
-                ToponymType tto = getOriginal(t.getType());
                 if (tto == null){
                     em.persist(t.getType());
                 } else {
