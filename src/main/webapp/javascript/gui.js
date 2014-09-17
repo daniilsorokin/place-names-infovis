@@ -272,8 +272,8 @@ VIZAPP.model = function () {
         self.name = data.formantName;
         self.formantNo = data.formantNo;
         self.toponymIds = data.toponymIds instanceof Array ? data.toponymIds : [data.toponymIds];
-        self.size = self.toponymIds.length;
-        self.toponyms = vm.getToponymsByIds(self.toponymIds);
+        self.toponyms = vm.getToponymsByFormant(self.formantNo);
+        self.size = self.toponyms.length;
         self.infotriggered = ko.observable(false);
         self.color = colorGenerator.generateNextColor();
         $.each(self.toponyms, function(index, toponym){
@@ -343,7 +343,7 @@ VIZAPP.model = function () {
         ko.bindingHandlers.showGroupOnMap = {
             init: function(element, valueAccessor){
                 var item = ko.dataFor(element);
-                var coordinates = $.map(self.getToponymsByIds(item.toponymIds), function(toponym){
+                var coordinates = $.map(item.toponyms, function(toponym){
                     if (toponym.latitude && toponym.latitude !== "0.0")
                         return {x:parseFloat(toponym.latitude), y:parseFloat(toponym.longitude)};  
                     else return;
@@ -391,6 +391,14 @@ VIZAPP.model = function () {
             var rarray = [];
             for(var i in self.toponyms()){
                 if ($.inArray(self.toponyms()[i].toponymNo, ids) > -1)
+                    rarray.push(self.toponyms()[i]);
+            }
+            return rarray;
+        };
+        self.getToponymsByFormant = function(formantId){
+            var rarray = [];
+            for(var i in self.toponyms()){
+                if (self.toponyms()[i].formantNo === formantId)
                     rarray.push(self.toponyms()[i]);
             }
             return rarray;
@@ -475,7 +483,7 @@ VIZAPP.model = function () {
                         self.sideInfoWindow.toponymlist([]);
                     } else if (infoItem instanceof Formant){
                         self.sideInfoWindow.latlng(null);
-                        var toponymsNames = $.map(self.getToponymsByIds(infoItem.toponymIds), function(item){ return item.name;});
+                        var toponymsNames = $.map(infoItem.toponyms, function(item){ return item.name;});
                         self.sideInfoWindow.toponymlist(toponymsNames);
                     }
                     $(this).offset({ top: $(e.target).offset().top - ($(this).height()/2) });
@@ -936,6 +944,7 @@ VIZAPP.gui = function () {
                         complete: function() {
                             animation.stop();
                             $("#upload-dataset-btn").removeAttr("disabled");
+                            $("#load-progress").hide("slide", {easing:"easeInExpo", direction: "left", duration: 400});
                         },
                         data: selectedFile,
                         contentType: fileType,

@@ -185,10 +185,7 @@ div.mousescroll {
 
 .dataset-btn {
     width: 180px !important;
-    height: 30px !important;
-    
     margin-top: 5px;
-    
     display: block;
 }
 
@@ -439,13 +436,11 @@ div.mousescroll {
 
 .stl-progress-bar {
     padding: 0px;
-    height: 24pt;
-    
     overflow: hidden;
 }
 
 .stl-progress {
-    height: 100%;
+    height: 30px;
     width: 30px;
     
     padding: 4pt;
