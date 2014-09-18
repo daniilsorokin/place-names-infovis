@@ -8,7 +8,6 @@
         <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyCu0d6lpgFSzznwCppY2HEoca4y1AM0Cow&v=3.exp&sensor=false&libraries=geometry"></script>
         <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
         
-        
         <script type="text/javascript" src="vendor/nanoscroller/jquery.nanoscroller.min.js"></script>
         <script type="text/javascript" src="vendor/kmeans/kmeans.js"></script>
         <script type="text/javascript" src="vendor/knockout/knockout-3.2.0.js"></script>
@@ -46,14 +45,17 @@
                                     <span data-bind="text: toponyms" class="pull-right"></span>
                                 </button>
                             </div>
+                            <div class="wait-circle">
+                                <div class="circle"></div> 
+                                <div class="rotating-slice"></div> 
+                            </div>
                             <div id="load-progress" class="stl-progress-bar simple-button dataset-btn center-block">
                                 <div class="stl-progress"></div>
                             </div>
                             <button id="confirm-delete-btn" class="simple-button control-on-right alert-grad">Delete selected</button>
+                            <h4 id="login-info"><a>Log in</a> first.</h4>
                         </div>
-                        <div class="bg-info footer">
-                            <h4 id="login-info"><a>Click here</a> to login.</h4>
-                        </div>
+                        <div class="bg-info footer"><h4></h4></div>
                     </div>
                     <div id="dataset-work-panel" class="sliding-panel left-column">
                         <table class="disable-select page-structure">
@@ -61,9 +63,7 @@
                                 <td id="list-selector-container" class="left-column">
                                     <table style="width: 100%;"><tr>
                                         <td style="width: 15%; padding: 2px">
-                                            <button id="back-to-dataset" class="simple-button">
-                                                Back
-                                            </button>
+                                            <button data-bind="click: goBack" class="simple-button">Back</button>
                                         </td><td style="width: 80%; text-align: center">
                                             <div id="list-selector">
                                                 <h4 id="select-toponyms-btn" class="list-selector selected" data-bind="enable: toponyms().length > 0">Toponyms</h4>
@@ -73,10 +73,6 @@
                                     </tr></table>
                                 </td>
                             </tr>
-<!--                            <tr>
-                                <td class="left-column">
-                                </td>
-                            </tr>-->
                             <tr>
                                 <td class="left-column list-container">
                                     <div id="toponyms-list-container" class="list-holder">
@@ -127,17 +123,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div style="display: none">
-                                        <ul><li id="toponym-list-template" class="dynamic-button ui-widget-content">
-                                                <span class="name"></span>
-                                                <span class="glyphicon glyphicon-chevron-right pull-right t-info-trigger"></span>
-                                        </li></ul>
-                                        <ul><li id="formant-list-template" class="dynamic-button ui-widget-content">
-                                                <span class="name"></span>
-                                                <span class="glyphicon glyphicon-chevron-right pull-right g-info-trigger"></span>
-                                                <span class="size small pull-right group-badge"></span>
-                                        </li></ul>
-                                    </div>                                    
                                 </td>
                             </tr>
                         </table>
