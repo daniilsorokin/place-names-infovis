@@ -121,9 +121,18 @@ VIZAPP.myMap = function () {
         mapTypeId:google.maps.MapTypeId.ROADMAP
     };
     var infoWindow = new google.maps.InfoWindow();
-
     var markers = {};
     var polygons = {};
+    
+    var radius = 1500;
+    var focusMarkerOptions = {
+        strokeWeight: 2,
+        strokeOpacity: 0.4,
+        fillOpacity: 0.1,
+        radius: radius*2.5,
+        zIndex: 1
+    };
+    var focusmarkers = [];
 
     return {
         init: function() {
@@ -135,8 +144,7 @@ VIZAPP.myMap = function () {
 
         placeMarker: function(toponym, color) {
             if (markers[toponym.toponymNo] === undefined) {
-                var opacity = 1.0;
-                var radius = 1500; 
+                var opacity = 1.0;                 
                 var latlng = new google.maps.LatLng(parseFloat(toponym.latitude), parseFloat(toponym.longitude));
                 var circleOptions = {
                     strokeWeight: 0,
@@ -158,7 +166,17 @@ VIZAPP.myMap = function () {
             }
             markers[toponym.toponymNo].setMap(map);
         },
-
+        focusOnMarker: function(toponym) {
+            var latlng = new google.maps.LatLng(parseFloat(toponym.latitude), parseFloat(toponym.longitude));
+            var focusmarker = new google.maps.Circle(focusMarkerOptions);
+            focusmarker.setCenter(latlng);
+            focusmarker.setMap(map);     
+            focusmarkers.push(focusmarker);
+        },
+        nofocusOnMarker: function(toponym) {
+            $.each(focusmarkers, function(i,e){ e.setMap(null); });
+            focusmarkers = [];
+        },
         hideMarker: function (toponym) {
             if (markers[toponym.toponymNo]) {
                 markers[toponym.toponymNo].setMap(null);
@@ -194,7 +212,13 @@ VIZAPP.myMap = function () {
             }
             polygons[formant.formantNo].setMap(map);
         },
-
+        focusOnGroup: function(formant) {
+            $.each(formant.toponyms, function(i,e) { VIZAPP.myMap.focusOnMarker(e); });
+        },
+        nofocusOnGroup: function(formant) {
+            $.each(focusmarkers, function(i,e){ e.setMap(null); });
+            focusmarkers = [];
+        },
         hidePolygon:  function (formant) {
             if (formant && polygons[formant.formantNo])
                 polygons[formant.formantNo].setMap(null);
@@ -238,7 +262,7 @@ VIZAPP.objects = function () {
         },
         createCircleWaitIcon:  function($element) {
             var animation = new circleWaitIcon($element);
-            animations.pushanimation
+            animations.push(animation);
             return animation;
         }
     };
@@ -339,6 +363,8 @@ VIZAPP.model = function () {
         ko.bindingHandlers.showGroupOnMap = {
             init: function(element, valueAccessor){
                 var item = ko.dataFor(element);
+                $(element).hover( function(){VIZAPP.myMap.focusOnGroup(item);},
+                                 function(){VIZAPP.myMap.nofocusOnGroup(item);} );
                 var coordinates = $.map(item.toponyms, function(toponym){
                     if (toponym.latitude && toponym.latitude !== "0.0")
                         return {x:parseFloat(toponym.latitude), y:parseFloat(toponym.longitude)};  
@@ -350,8 +376,8 @@ VIZAPP.model = function () {
                         var dPoints = new Array();
                         for (var j in data[i]) {
                             var aPoint = new google.maps.LatLng(data[i][j][0], data[i][j][1]);
-                            for(var c = 0; c < 360; c += 360 / 6) {
-                                var bPoint = google.maps.geometry.spherical.computeOffset(aPoint, 3000, c)
+                            for(var c = 0; c < 360; c += 360 / 8) {
+                                var bPoint = google.maps.geometry.spherical.computeOffset(aPoint, 6000, c)
                                 dPoints.push([bPoint.lat(), bPoint.lng()]);
                             }
                         }
@@ -370,6 +396,11 @@ VIZAPP.model = function () {
             }
         };
         ko.bindingHandlers.showToponymOnMap = {
+            init: function(element) {
+                var item = ko.dataFor(element);
+                $(element).hover( function(){VIZAPP.myMap.focusOnMarker(item);},
+                                 function(){VIZAPP.myMap.nofocusOnMarker(item);} );
+            },
             update: function(element, valueAccessor) {
                 var item = ko.dataFor(element);
                 if(valueAccessor()){
@@ -557,7 +588,7 @@ VIZAPP.gui = function () {
             sum += dists[d];
         }
         var avgDist = sum / dists.length;
-        var k = ~~(avgDist / 10000);
+        var k = ~~(avgDist / 20000);
         k = k === 0 ? 1 : k;
         return k;
     };
