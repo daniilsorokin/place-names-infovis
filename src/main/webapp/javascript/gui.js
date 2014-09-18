@@ -203,14 +203,18 @@ VIZAPP.myMap = function () {
 }();
 
 VIZAPP.objects = function () {
+    var animations = [];
     var circleWaitIcon = function($element){
-//            $element.addClass("wait-circle");
+            var circle = $("<div>").addClass("circle");     
+            $("<div>").addClass("wait-circle").append(circle).appendTo($element);
             var deg = 0;
             this.t = setInterval(function(){
                 deg = deg < 340 ? deg + 20 : 0;
-                $element.css({transform: 'rotate(' + deg + 'deg)'});
+                circle.css({transform: 'rotate(' + deg + 'deg)'});
             }, 100);
             this.stop = function(){clearInterval(this.t)};
+            this.clear = function(){clearInterval(this.t); $element.empty();};
+            this.alert = function(){clearInterval(this.t); circle.addClass("alert"); };
         }
     
     
@@ -229,8 +233,13 @@ VIZAPP.objects = function () {
             }, 20);
             this.stop = function(){clearInterval(this.t)};
         },
+        stopAnimations: function(){
+          $.each(animations, function(i,e){ e.stop(); });
+        },
         createCircleWaitIcon:  function($element) {
-            return new circleWaitIcon($element);
+            var animation = new circleWaitIcon($element);
+            animations.pushanimation
+            return animation;
         }
     };
 }();
@@ -526,9 +535,8 @@ VIZAPP.model = function () {
 }();
 
 VIZAPP.gui = function () {
-    var kmeans = new KMeans(); kmeans.kmpp = true;
-    
-    var $activeList = undefined;
+    var kmeans = new KMeans(); 
+    kmeans.kmpp = true;
     
     var convertClusters = function(){
         //TODO
@@ -577,7 +585,6 @@ VIZAPP.gui = function () {
             });
             
             $("#info-window-container .panel").hide();
-            VIZAPP.objects.createCircleWaitIcon($(".rotating-circle"));
 
             $("#delete-dataset-btn").click(function(){
                 if ($(this).hasClass("selected")){
@@ -635,10 +642,6 @@ VIZAPP.gui = function () {
             $("#load-progress").hide();
             $("#confirm-delete-btn").hide();
            
-            $("#select-dataset-file").click(function(){
-                $("#dataset-file").click();
-            });
-            
             $("#load-button").click(function(){
                 var selectedFile = $("#dataset-file")[0].files[0];
                 var fileType = "text/plain";
@@ -649,64 +652,33 @@ VIZAPP.gui = function () {
                 } else {
                     var datasetName = $("#name-dataset").val();
                     var dataType = $("#data-type-options button.selected").text();
-                    $("#load-progress").show("slide", {easing:"easeOutExpo", direction: "left", duration: 400});
-                    $("#load-progress > .stl-progress")
-                            .css("width", "0%")
-                            .text("0")
-                            .removeClass("alert-grad");
-                    var animation;
+                    var animation = VIZAPP.objects.createCircleWaitIcon($("#upload-info-area"));
+                    $("#upload-info-area").hide().show("drop", {easing:"easeOutExpo", direction: "down", duration: 400 });
+                    $("#load-file-modal").hide("drop", {easing:"easeInExpo", direction: "up", duration: 200 });
+                    $("#upload-dataset-btn").attr("disabled", "disabled");
                     $.ajax({
                         url: "request/dataset/upload/" + datasetName + "/" + dataType,
                         type: 'POST',
-                        xhr: function() { 
-                            var myXhr = $.ajaxSettings.xhr();
-                            if(myXhr.upload){
-                                myXhr.upload.addEventListener('progress',function(e){
-                                    if (e.lengthComputable) {
-                                        var val = Math.round((e.loaded / e.total) * 100);
-                                        if (val < 100){
-                                            $("#load-progress > .stl-progress")
-                                                    .css("width", val + "%")
-                                                    .text(val + "%");
-                                        } else {
-                                            $("#load-progress > .stl-progress")
-                                                    .css("width", "30%")
-                                                    .text("");
-                                            animation = new VIZAPP.objects.cycleAnimator($("#load-progress .stl-progress"), "margin-left", 
-                                                -$("#load-progress .stl-progress").outerWidth(), 
-                                                $("#load-progress").innerWidth()
-                                            );
-                                        }
-                                    }
-                                }, false);
-                            }
-                            return myXhr;
+                        success: function(){
+                            animation.clear();
+                            VIZAPP.model.getViewModel().refreshDatasetList();
                         },
-                        success: VIZAPP.model.getViewModel().refreshDatasetList,
                         error: function(){
-                            $("#load-progress > .stl-progress")
-                                    .addClass("alert-grad")
-                                    .css({width: "100%", margin: 0})
-                                    .text("failed");
-                            setTimeout(function(){
-                                    $("#load-progress").hide("slide", {easing:"easeInExpo", direction: "left", duration: 400});
-                                }, 2000);
+                            animation.alert();
+                            setTimeout(function(){ animation.clear(); }, 2000);
                         },
                         complete: function() {
-                            animation.stop();
                             $("#upload-dataset-btn").removeAttr("disabled");
-                            $("#load-progress").hide("slide", {easing:"easeInExpo", direction: "left", duration: 400});
                         },
                         data: selectedFile,
                         contentType: fileType,
                         processData: false,
                         cache:false
                     });
-                    $("#load-file-modal").hide("drop", {easing:"easeInExpo", direction: "up", duration: 200 });
-                    $("#upload-dataset-btn").attr("disabled", "disabled");
                 }
             });
             
+            $("#select-dataset-file").click(function(){ $("#dataset-file").click(); });
             $("#dataset-file").change(function(){
                 var selectedFile = $("#dataset-file")[0].files[0];
                 $("#select-dataset-file > span").text(selectedFile.name);

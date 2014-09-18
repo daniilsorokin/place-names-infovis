@@ -189,40 +189,44 @@ public class DatasetFacadeREST extends AbstractFacade<Dataset> {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         em.persist(newDataset);
-        while (deserializer.hasNext()) {
-            ToponymObject t = deserializer.next();
-            Formant f = t.getFormant();
-            Formant fo = null;
-            ToponymType tto = null;
-
-            if (f != null) {
-                f.setDataset(newDataset);
-                fo = getOriginal(f);
-            }
-            if (t.getType()!= null) {
-                tto = getOriginal(t.getType());
-            }
-            if (f != null) {
-                if (fo == null){
-                    newDataset.addFormantToList(f);
-                    em.persist(f);
-                    f.addToponymObjectToList(t);
-                } else {
-                    t.setFormant(fo);
-                    fo.addToponymObjectToList(t);
+        try {
+            while (deserializer.hasNext()) {
+                ToponymObject t = deserializer.next();
+                Formant f = t.getFormant();
+                Formant fo = null;
+                ToponymType tto = null;
+                
+                if (f != null) {
+                    f.setDataset(newDataset);
+                    fo = getOriginal(f);
                 }
-            }
-
-            if (t.getType()!= null){
-                if (tto == null){
-                    em.persist(t.getType());
-                } else {
-                    t.setType(tto);
+                if (t.getType()!= null) {
+                    tto = getOriginal(t.getType());
                 }
+                if (f != null) {
+                    if (fo == null){
+                        newDataset.addFormantToList(f);
+                        em.persist(f);
+                        f.addToponymObjectToList(t);
+                    } else {
+                        t.setFormant(fo);
+                        fo.addToponymObjectToList(t);
+                    }
+                }
+                
+                if (t.getType()!= null){
+                    if (tto == null){
+                        em.persist(t.getType());
+                    } else {
+                        t.setType(tto);
+                    }
+                }
+                t.setDataset(newDataset);
+                newDataset.addToponymObjectToList(t);
+                em.persist(t);
             }
-            t.setDataset(newDataset);
-            newDataset.addToponymObjectToList(t);
-            em.persist(t);
+        } catch (Exception e) {
+            tx.rollback();
         }
         tx.commit();
         deserializer.close(true);

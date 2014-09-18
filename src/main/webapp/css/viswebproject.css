@@ -185,7 +185,7 @@ div.mousescroll {
 
 .dataset-btn {
     width: 180px !important;
-    margin-top: 5px;
+    margin: 5px 0;
     display: block;
 }
 
@@ -266,7 +266,7 @@ div.mousescroll {
 
 
 .simple-button {
-    height: 30px;
+    height: 30px !important;
     
     padding: 4px 7px;
 
@@ -500,34 +500,29 @@ div.mousescroll {
 }
 
 .wait-circle {
+    width: 30px;
+    height: 30px;
     position: relative;
-    margin: 2px;
-    padding: 2px;
-    background-color: white;
+    margin: 0 auto;
 }
 
 .wait-circle .circle {
-    top: 0px;
-    left: 0px;
-    width: 20px;
-    height: 20px;
-
-    position:absolute;
+    width: 30px;
+    height: 30px;
+    position: absolute;
     
-    background-color: white;
-    border-radius: 20px;
-    border: 4px solid #028ac8;
+    border-radius: 30px;
+    border: 5px solid #028ac8;
+    clip: rect(0,15px,30px,0);
 }
 
-.wait-circle .rotating-slice {
-    top: 0px;
-    left: 0px;
-    width: 20px;
-    height: 20px;
-
-    position:absolute;
-    background-color: white;
-    clip: rect(0em,10px,20px,0em);   
+.wait-circle .circle.alert {
+    border: 0px;
+    clip: rect(0,30px,30px,0);
+    background: -webkit-linear-gradient(#fe2a31, #cd0108); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#fe2a31, #cd0108); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#fe2a31, #cd0108); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#fe2a31, #cd0108); /* Standard syntax */        
 }
 
 /* particular elements (based on id) */
