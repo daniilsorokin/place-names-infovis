@@ -285,6 +285,10 @@ VIZAPP.model = function () {
         this.color = "#0066CC";
         this.infotriggered = ko.observable(false);
         this.selected = ko.observable(false);
+        this.selected.subscribe(function(newValue){
+            if(newValue){ VIZAPP.myMap.placeMarker(this, this.color); } 
+            else { VIZAPP.myMap.hideMarker(this); }
+        }, this);
     };
 
     var Formant = function(data, vm) {
@@ -340,6 +344,11 @@ VIZAPP.model = function () {
             init: function(element, valueAccessor){
                 $(element).hover( function(){$(".info-trigger", this).css('visibility', 'visible');},
                                   function(){$(".info-trigger:not(.triggered)", this).css('visibility', 'hidden');} );
+            },
+            update: function(element, valueAccessor){
+                if(!valueAccessor()) 
+                    $(".info-trigger",  $(element)).fadeTo(200, 0, function(){ $(this).css({visibility: 'hidden', opacity: 1}); }); 
+
             }
         };
         ko.bindingHandlers.turnHalfCircle = {
@@ -395,19 +404,11 @@ VIZAPP.model = function () {
                 }
             }
         };
-        ko.bindingHandlers.showToponymOnMap = {
+        ko.bindingHandlers.focusOnMap = {
             init: function(element) {
                 var item = ko.dataFor(element);
                 $(element).hover( function(){VIZAPP.myMap.focusOnMarker(item);},
                                  function(){VIZAPP.myMap.nofocusOnMarker(item);} );
-            },
-            update: function(element, valueAccessor) {
-                var item = ko.dataFor(element);
-                if(valueAccessor()){
-                    VIZAPP.myMap.placeMarker(item, item.color);
-                } else {
-                    VIZAPP.myMap.hideMarker(item);
-                }
             }
         };
         
@@ -465,54 +466,23 @@ VIZAPP.model = function () {
             setActiveSort(header);
             header.asc(!header.asc());
         };
+
+        self.sideInfoWindow = ko.observable(null);
         
-        self.infoTriggeredElement = null;
-        self.sideInfoWindow = {
-            name: ko.observable(),
-            othernames: ko.observable(),
-            
-            latlng: ko.observable(),
-            language: ko.observable(),
-            type: ko.observable(),
-            group: ko.observable(),
-            
-            size: ko.observable(),
-            toponymlist: ko.observableArray([]),
-            
-            close: function(){
-                if(self.infoTriggeredElement) self.infoTriggeredElement.infotriggered(false);
-                self.infoTriggeredElement = null;
-                $("#info-panel").hide("slide", { direction: "left", duration: 200});                
-            }
-            
-        };
-        
-        self.showSideInfoWindow = function(infoItem, e) {
-            if (self.infoTriggeredElement === infoItem) {
-                self.sideInfoWindow.close();
+        self.toggleInfoWindow = function(infoItem, e) {
+            if (self.sideInfoWindow() === infoItem) {
+                self.sideInfoWindow().infotriggered(false);
+                self.sideInfoWindow(null);
+                $("#info-panel").hide("slide", { direction: "left", duration: 200});
                 return;
-            }            
-            if(self.infoTriggeredElement) self.infoTriggeredElement.infotriggered(false);
+            }
+            if(self.sideInfoWindow()) self.sideInfoWindow().infotriggered(false);
             infoItem.infotriggered(true);
-            self.infoTriggeredElement = infoItem;
             
             $("#info-panel").hide("slide", { 
                 easing:"easeInExpo", direction: "left", duration: 200,
                 complete: function() {
-                    self.sideInfoWindow.name(infoItem.name);
-                    self.sideInfoWindow.othernames(infoItem.othernames);
-                    self.sideInfoWindow.language(infoItem.language);
-                    self.sideInfoWindow.type(infoItem.type);
-                    self.sideInfoWindow.group(infoItem.formantName);
-                    self.sideInfoWindow.size(infoItem.size);
-                    if(infoItem instanceof Toponym){
-                        self.sideInfoWindow.latlng(infoItem.latitude + ", " + infoItem.longitude);
-                        self.sideInfoWindow.toponymlist([]);
-                    } else if (infoItem instanceof Formant){
-                        self.sideInfoWindow.latlng(null);
-                        var toponymsNames = $.map(infoItem.toponyms, function(item){ return item.name;});
-                        self.sideInfoWindow.toponymlist(toponymsNames);
-                    }
+                    self.sideInfoWindow(infoItem);
                     $(this).offset({ top: $(e.target).offset().top - ($(this).height()/2) });
                 }
             }).show("slide", {easing:"easeOutExpo", direction: "left", duration: 400 });

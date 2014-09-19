@@ -113,6 +113,21 @@ function byte2Hex(n)
     return String(nybHexString.substr((n >> 4) & 0x0F,1)) + nybHexString.substr(n & 0x0F,1);
 }
 
+/**
+ * 
+ * @param {type} hex
+ * @returns RGB Array
+ * @see http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+ */
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
 
 /**
  * Generates a set number of distinct colors.
@@ -181,6 +196,12 @@ function makeColorGradient(frequency1, frequency2, frequency3,
         colors.push(RGB2Color(red,grn,blu));   
     }
     return colors;
+}
+
+function lightness(color){
+    var rgb = hexToRgb(color);
+    var value = Math.round(((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) /1000);
+    return value;
 }
 
 /* Objects definitions */

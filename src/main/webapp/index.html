@@ -77,7 +77,7 @@
                                         <div class="list-control-panel">
                                             <div class="input-block" style="width: 50%" >
                                                 <input class="input-text-sm" data-bind="value: tFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 100%"  />
-                                                <span data-bind="click: function(){ tFilter(''); }, visible: tFilter() != ''" class="clear-input">x</span>
+                                                <span data-bind="click: function(){ tFilter(''); }, visible: tFilter() != ''" class="clear-input"></span>
                                             </div>
                                             <div class="simple-block">
                                                 <button data-bind="click: function(d,e){ sortListBy($root.toponyms, $root.tsortHeaders[0], $root.tactiveSort);}, text: (tsortHeaders[0].asc() ? tsortHeaders[0].titleasc : tsortHeaders[0].titledes), css:{selected: tactiveSort() === tsortHeaders[0]}" class="simple-button"></button>
@@ -87,10 +87,10 @@
                                         <div class="nano">
                                             <div id="toponyms-list-content" class="content">
                                                 <ul id="toponyms-list" class="list disable-select" data-bind="foreach: toponyms, selectableList: {onFunc: $root.selectToponym, offFunc: $root.deselectToponym}">
-                                                    <li data-bind="visible: $root.matchFilter($root.tFilter(), name), showToponymOnMap: selected(), showTriggerOnHover: true, style:{ background: selected() ? color : 'white'}, css:{'ui-selected selected': selected()}" class="dynamic-button ui-widget-content">
+                                                    <li data-bind="visible: $root.matchFilter($root.tFilter(), name), focusOnMap: true, showTriggerOnHover: infotriggered(), style:{ background: selected() ? color : 'white'}, css:{'ui-selected selected': selected()}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="visible: !latitude" class="no-data-alert">No location</span>
-                                                        <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
+                                                        <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger"></span>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -100,7 +100,7 @@
                                         <div class="list-control-panel">
                                             <div class="input-block" style="width: 40%" >
                                                 <input class="input-text-sm" data-bind="value: fFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 100%"  />
-                                                <span data-bind="click: function(){ fFilter(''); }, visible: fFilter() != ''" class="clear-input">x</span>
+                                                <span data-bind="click: function(){ fFilter(''); }, visible: fFilter() != ''" class="clear-input"></span>
                                             </div>
                                             <div class="simple-block">
                                                 <button data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[0], $root.factiveSort);}, text: (fsortHeaders[0].asc() ? fsortHeaders[0].titleasc : fsortHeaders[0].titledes), css:{selected: factiveSort() === fsortHeaders[0]}" class="simple-button"></button><button
@@ -113,7 +113,7 @@
                                                 <ul id="groups-list" class="list disable-select" data-bind="foreach: formants, selectableList: {onFunc: $root.selectFormant, offFunc: $root.deselectFormant}">
                                                     <li data-bind="visible: $root.matchFilter($root.fFilter(), name), showGroupOnMap: selectedTops() === size, showTriggerOnHover: true, style:{ background: selectedTops() === size ? color : 'white'}, css:{'ui-selected selected': selectedTops() === size}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
-                                                        <span data-bind="click: $root.showSideInfoWindow, css: {triggered: infotriggered()}, turnHalfCircle: infotriggered()" class="glyphicon glyphicon-chevron-right pull-right info-trigger"></span>
+                                                        <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger"></span>
                                                         <span class="group-badge">
                                                             <span data-bind="text: selectedTops() + ' /', visible: selectedTops() > 0" class="small"></span> 
                                                             <span data-bind="text: size" class="small"></span>
@@ -131,29 +131,34 @@
                 </td>
                 <td>
                     <div id="info-window-container" class="info-window-container">
-                        <div id="info-panel" class="panel panel-default">
+                        <div id="info-panel" class="panel panel-default" data-bind="with: sideInfoWindow ">
                             <div class="panel-heading">
-                                <button data-bind="click: sideInfoWindow.close" type="button" class="close" aria-hidden="true">&times;</button>
-                                <h4 class="small-margins"><span data-bind="text: sideInfoWindow.name()" class="title"></span></br><small></small></h4>
+                                <button data-bind="click: $root.toggleInfoWindow" type="button" class="close" aria-hidden="true">&times;</button>
+                                <h4 class="small-margins"><span data-bind="text: name" class="title"></span></br>
+                                    <!-- ko if: $data.othernames --><small data-bind="text: othernames"></small><!-- /ko -->
+                                </h4>
                             </div>
                             <div class="panel-body">
                                 <dl class="dl-horizontal info-list">
-                                    <dt data-bind="visible: sideInfoWindow.latlng()" class="latlng">LatLng</dt>
-                                    <dd data-bind="text: sideInfoWindow.latlng(), visible: sideInfoWindow.latlng()" class="latlng"></dd>
-                                    <dt data-bind="visible: sideInfoWindow.language()" class="language">Language</dt>
-                                    <dd data-bind="text: sideInfoWindow.language(), visible: sideInfoWindow.language()" class="language"></dd>
-                                    <dt data-bind="visible: sideInfoWindow.type()" class="type">Type</dt>
-                                    <dd data-bind="text: sideInfoWindow.type(), visible: sideInfoWindow.type()" class="type"></dd>
-                                    <dt data-bind="visible: sideInfoWindow.group()" class="group">Group</dt>
-                                    <dd data-bind="text: sideInfoWindow.group(), visible: sideInfoWindow.group()" class="group">
-                                        <!--<button id="test-button" class="btn btn-default btn-xs"></button>-->
-                                    </dd>
-                                    <dt data-bind="visible: sideInfoWindow.size()" class="size">Size</dt>
-                                    <dd data-bind="text: sideInfoWindow.size(), visible: sideInfoWindow.size()" class="size"></dd>
-                                    <dt data-bind="visible: sideInfoWindow.toponymlist().length > 0" class="toponym-list">Toponyms</dt>
-                                    <dd data-bind="foreach: sideInfoWindow.toponymlist(), visible: sideInfoWindow.toponymlist().length > 0" class="toponym-list small">
-                                        <button data-bind="text: $data" class="element-info-btn btn btn-default btn-xs"></button>
+                                    <!-- ko if: $data.latitude --><dt>LatLng</dt>
+                                    <dd data-bind="text: latitude + ', ' + longitude "></dd><!-- /ko -->
+                                    <!-- ko if: $data.language --><dt>Language</dt>
+                                    <dd data-bind="text: language"></dd><!-- /ko -->
+                                    <!-- ko if: $data.type --><dt>Type</dt>
+                                    <dd data-bind="text: type"></dd><!-- /ko -->
+                                    <!-- ko if: $data.formantName --><dt>Group</dt>
+                                    <dd><span data-bind="text: formantName"></span>
+                                        <span class="toponym-element">i</span>
+                                    </dd><!-- /ko -->
+                                    <!-- ko if: $data.size --><dt>Size</dt>
+                                    <dd data-bind="text: size"></dd><!-- /ko -->
+                                    <!-- ko if: $data.toponyms -->
+                                    <dt class="toponym-list">Toponyms</dt>
+                                    <dd data-bind="foreach: toponyms" class="toponym-list small">
+                                        <button data-bind="text: name, click: function(){ selected(!selected())}, focusOnMap: true, style:{ color: selected() ? color : 'black', background: lightness(color) < 175 ? '#eeeeee': '#a1a1a1'}, css:{selected: selected()}" class="toponym-element"></button>
+                                        <!--<button data-bind="text: name" class="element-info-btn btn btn-default btn-xs"></button>-->
                                     </dd>                          
+                                    <!-- /ko -->
                                 </dl>
                             </div>
                         </div>

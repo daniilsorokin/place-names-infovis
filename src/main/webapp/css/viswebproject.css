@@ -48,9 +48,6 @@ div.mousescroll {
 .nano .pane   { background: #888; z-index: 10;}
 .nano .slider { background: #111; }
 
-.triggered {
-    color: #1e8826;
-}
 
 .list { 
     list-style-type: none; 
@@ -66,6 +63,7 @@ div.mousescroll {
     margin: 1px 3px;
     padding: 5px 10px 5px 5px;
 }
+.list li:hover { border-color: #028ac8; }
 
 .list li span {
     z-index: 5;
@@ -74,6 +72,7 @@ div.mousescroll {
 .name {
     position: relative;
 }
+
 
 .list .ui-selecting { border-color: #0066CC; }
 .list .ui-selected { background: #0066CC; color: white; }
@@ -141,7 +140,7 @@ div.mousescroll {
 
 .group-badge {
     position: absolute;
-    right: 30px;
+    right: 40px;
 }
 
 .element-info-btn {
@@ -164,6 +163,22 @@ div.mousescroll {
 
 .info-list dd {
     margin-left: 80px;
+}
+
+.info-list .toponym-element {
+    margin: 1px 2px;
+    
+    background-color: #eeeeee;
+    border: 0px solid #c8c8c8;
+    border-radius: 2px;
+}
+
+.info-list .toponym-element.selected {
+    font-weight: bold;
+}
+
+.info-list .toponym-element:focus {
+    outline: 0;
 }
 
 .panel {
@@ -419,21 +434,25 @@ div.mousescroll {
     border-radius: 3px;
 }
 
+.clear-input:before {
+    content: "×";
+}
 .clear-input {
     position: absolute;
     height: 14px;
     width: 14px;
     top: 8px;
     right: 6px;
-    
+
+    display: inline-block;
+    font-style: normal;
+    line-height: 1;
     text-align: center;
-    font-size: 8pt;
-    
-    border-radius: 14px;
-    border: none;
-    background-color: #aaaaaa;
-    color: white;
+    font-size: 10pt;
     font-weight: bold;
+    
+    border: none;
+    color: #aaaaaa;
     cursor: pointer;
 }
 
@@ -470,11 +489,32 @@ div.mousescroll {
     font-size: 7pt; 
 }
 
-.info-trigger {
-    /*visibility: hidden;*/
-    cursor: pointer;
+.info-trigger:before {
+  content: "i";
 }
-
+.info-trigger {
+    visibility: hidden;
+    
+    position: absolute;
+    right: 15px;
+    
+    height: 15px;
+    width: 15px;
+    
+    display: inline-block;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    text-align: center;
+    
+    cursor: pointer;
+    color: #028ac8;
+    border-radius: 15px;
+    border: 1px solid #028ac8;
+}
+.info-trigger.triggered {
+    visibility: visible;
+}
 .wait-circle {
     width: 30px;
     height: 30px;
