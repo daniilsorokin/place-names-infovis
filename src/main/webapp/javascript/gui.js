@@ -471,9 +471,10 @@ VIZAPP.model = function () {
         
         self.toggleInfoWindow = function(infoItem, e) {
             if (self.sideInfoWindow() === infoItem) {
-                self.sideInfoWindow().infotriggered(false);
-                self.sideInfoWindow(null);
-                $("#info-panel").hide("slide", { direction: "left", duration: 200});
+                self.sideInfoWindow().infotriggered(false);                
+                $("#info-panel").hide("slide", { direction: "left", duration: 200, 
+                    complete: function(){self.sideInfoWindow(null);} 
+                });
                 return;
             }
             if(self.sideInfoWindow()) self.sideInfoWindow().infotriggered(false);

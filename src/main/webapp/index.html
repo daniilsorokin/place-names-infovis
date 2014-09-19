@@ -63,9 +63,9 @@
                                         <td style="width: 15%; padding: 2px">
                                             <button data-bind="click: goBack" class="simple-button">Back</button>
                                         </td><td style="width: 80%; text-align: center">
-                                            <div id="list-selector">
-                                                <h4 id="select-toponyms-btn" class="list-selector selected" data-bind="enable: toponyms().length > 0">Toponyms</h4>
-                                                <h4 id="select-groups-btn" class="list-selector" data-bind="enable: formants().length > 0">Groups</h4>
+                                            <div id="list-selector" class="simple-block">
+                                                <button id="select-toponyms-btn" class="simple-button list-selector selected" data-bind="enable: toponyms().length > 0">Toponyms</button><button 
+                                                    id="select-groups-btn" class="simple-button list-selector" data-bind="enable: formants().length > 0">Groups</button>
                                             </div>
                                         </td><td style="width: 5%"></td>
                                     </tr></table>
@@ -111,7 +111,7 @@
                                         <div class="nano">
                                             <div class="content">
                                                 <ul id="groups-list" class="list disable-select" data-bind="foreach: formants, selectableList: {onFunc: $root.selectFormant, offFunc: $root.deselectFormant}">
-                                                    <li data-bind="visible: $root.matchFilter($root.fFilter(), name), showGroupOnMap: selectedTops() === size, showTriggerOnHover: true, style:{ background: selectedTops() === size ? color : 'white'}, css:{'ui-selected selected': selectedTops() === size}" class="dynamic-button ui-widget-content">
+                                                    <li data-bind="visible: $root.matchFilter($root.fFilter(), name), showGroupOnMap: selectedTops() === size, showTriggerOnHover:  infotriggered(), style:{ background: selectedTops() === size ? color : 'white'}, css:{'ui-selected selected': selectedTops() === size}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger"></span>
                                                         <span class="group-badge">
