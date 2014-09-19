@@ -67,8 +67,11 @@ div.mousescroll {
     padding: 5px 10px 5px 5px;
 }
 
-.list li span{
+.list li span {
     z-index: 5;
+}
+
+.name {
     position: relative;
 }
 
@@ -137,7 +140,8 @@ div.mousescroll {
 }
 
 .group-badge {
-    margin: 0px 10px;
+    position: absolute;
+    right: 30px;
 }
 
 .element-info-btn {
@@ -431,34 +435,6 @@ div.mousescroll {
     color: white;
     font-weight: bold;
     cursor: pointer;
-}
-
-
-.stl-progress-bar {
-    padding: 0px;
-    overflow: hidden;
-}
-
-.stl-progress {
-    height: 30px;
-    width: 30px;
-    
-    padding: 4pt;
-    font-size: 12pt;
-        
-    color: white;
-    background: -webkit-linear-gradient(#00afff, #028ac8); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#00afff, #028ac8); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#00afff, #028ac8); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#00afff, #028ac8); /* Standard syntax */    
-}
-
-.alert-grad {
-    color: white;    
-    background: -webkit-linear-gradient(#fe2a31, #cd0108); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#fe2a31, #cd0108); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#fe2a31, #cd0108); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#fe2a31, #cd0108); /* Standard syntax */    
 }
 
 .dynamic-button {
