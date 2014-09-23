@@ -50,7 +50,9 @@
                             <div id="load-progress" class="stl-progress-bar simple-button dataset-btn center-block">
                                 <div class="stl-progress"></div>
                             </div>
-                            <button id="confirm-delete-btn" class="simple-button control-on-right alert-grad">Delete selected</button>
+                            <div class="dataset-control-panel">
+                                <button id="confirm-delete-btn" class="simple-button to-right fixed-size">Delete selected</button>
+                            </div>
                             <h4 id="login-info"><a>Log in</a> first.</h4>
                         </div>
                         <div class="bg-info footer"><h4></h4></div>
@@ -60,12 +62,17 @@
                             <tr>
                                 <td id="list-selector-container" class="left-column">
                                     <table style="width: 100%;"><tr>
-                                        <td style="width: 15%; padding: 2px">
-                                            <button data-bind="click: goBack" class="simple-button">Back</button>
-                                        </td><td style="width: 80%; text-align: center">
-                                            <div id="list-selector" class="simple-block">
-                                                <button id="select-toponyms-btn" class="simple-button list-selector selected" data-bind="enable: toponyms().length > 0">Toponyms</button><button 
-                                                    id="select-groups-btn" class="simple-button list-selector" data-bind="enable: formants().length > 0">Groups</button>
+                                        <td style="width: 15%; padding: 4px">
+                                            <button data-bind="click: goBack" class="simple-button">
+                                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                            </button>
+                                        </td><td style="width: 85%; text-align: center; padding: 4px">
+                                            <div id="list-selector" class="simple-block-justified simple-block">
+                                                <div class="simple-block">
+                                                <button id="select-toponyms-btn" class="simple-button list-selector selected" data-bind="enable: toponyms().length > 0">Toponyms</button>
+                                                </div><div class="simple-block">
+                                                <button id="select-groups-btn" class="simple-button list-selector" data-bind="enable: formants().length > 0">Groups</button>
+                                                </div>
                                             </div>
                                         </td><td style="width: 5%"></td>
                                     </tr></table>
@@ -168,11 +175,11 @@
             </tr>  
         </table>
         <div id="load-file-modal" class="full-alert">
-            <div id="data-type-options" class="simple-block-justified">
-                <div class="simple-block-justified">
+            <div id="data-type-options" class="simple-block-justified simple-block">
+                <div class="simple-block">
                     <button id="csv-button" class="simple-button selected">CSV</button>
                 </div>
-                <div class="simple-block-justified">
+                <div class="simple-block">
                     <button id="tsv-button" class="simple-button">TSV</button>
                 </div>
             </div>
