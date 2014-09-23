@@ -495,7 +495,10 @@ VIZAPP.model = function () {
                 easing:"easeInExpo", direction: "left", duration: 200,
                 complete: function() {
                     self.sideInfoWindow(infoItem);
-                    $(this).offset({ top: $(e.target).offset().top - ($(this).height()/2) });
+                    var offset = $(e.target).offset().top - ($(this).height()/2);
+                    if (offset < 0) offset = 10;
+                    if (offset > $(this).parent().height() - $(this).height()) offset = $(this).parent().height() - $(this).height() - 10;
+                    $(this).offset({ top:  offset});
                 }
             }).show("slide", {easing:"easeOutExpo", direction: "left", duration: 400 });
         };
