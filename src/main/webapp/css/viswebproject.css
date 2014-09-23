@@ -2,7 +2,6 @@
     Document   : viswebproject
     Created on : Mar 10, 2013, 11:25:17 AM
     Author     : Daniil Sorokin <daniil.sorokin@uni-tuebingen.de>
-    Description:
 */
 
 /* elements */
@@ -11,6 +10,7 @@ html,body{ margin:0; padding:0; height:100%; border:none}
 table {margin: 0px; padding:0px;}
 tr {margin: 0px; padding:0px;}
 td {margin: 0px; /* padding:0px; */}
+#login-info { display: none; }
 
 /* classes */
 table.page-structure {
@@ -44,7 +44,7 @@ div.mousescroll {
     user-select:none
 }
 
-.nano {height: auto; top: 41px; bottom: 0px; width:100%; position: absolute}
+.nano {height: auto; top: 41px; bottom: 0px; width:100%; position: absolute; z-index: 5}
 .nano .pane   { background: #888; z-index: 10;}
 .nano .slider { background: #111; }
 
@@ -78,13 +78,23 @@ div.mousescroll {
 .list-control-panel {
     height: 40px;
     width: 100%;
-    padding: 2px;
+    padding: 4px;
 
     text-align: left;
     vertical-align: middle;
     display: table-cell;
     
     border-bottom: 1px solid #cecece;
+}
+
+.list-control-panel.extend-control {
+    position: absolute;
+    top: 41px;
+    height: 40px !important;
+    padding: 6px;
+    
+    z-index: 6;
+    background-color: white;
 }
 
 .dataset-control-panel {
@@ -238,27 +248,6 @@ div.mousescroll {
     margin: 7px 5px;
 }
 
-.full-alert {
-    width: 400px !important;
-    height: 250px !important;
-    
-    position: absolute;
-    top: 20%;
-    left: 0;
-    right: 0;
-    z-index: 5;
-    
-    margin: 0 auto;
-    padding: 10px;
-    
-    text-align: center;
-    
-    border: 0px;
-    border-radius: 5px;
-    background-color: rgba(255,255,255,0.8);
-    box-shadow: 2px 2px 4px -2px #aaaaaa;
-}
-
 
 /* Buttons and Blocks */
 .small-button {
@@ -307,6 +296,14 @@ div.mousescroll {
     background: -moz-linear-gradient(#00afff, #1d9efe); /* For Firefox 3.6 to 15 */
     background: linear-gradient(#00afff, #1d9efe); /* Standard syntax */
 }
+.simple-button.alert {    
+    font-weight: bold;
+    color: white;    
+    background: -webkit-linear-gradient(#fe2a31, #cd0108); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#fe2a31, #cd0108); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#fe2a31, #cd0108); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#fe2a31, #cd0108); /* Standard syntax */        
+}
 .simple-button.fixed-size { width: 130px !important; }
 .simple-button.to-right { position: absolute; right: 0px;}
 
@@ -333,7 +330,27 @@ div.mousescroll {
     border-radius: inherit;
 }
 
-/* Modal area */
+/* Modal area and Input */
+.full-alert {
+    width: 400px !important;
+    height: 250px !important;
+    
+    position: absolute;
+    top: 20%;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    
+    margin: 0 auto;
+    padding: 10px;
+    
+    text-align: center;
+    
+    border: 0px;
+    border-radius: 5px;
+    background-color: rgba(255,255,255,0.8);
+    box-shadow: 2px 2px 4px -2px #aaaaaa;
+}
 
 .select-area {
     width: 100%;
@@ -357,121 +374,6 @@ div.mousescroll {
 .select-area > span {
     display: table-cell;
     vertical-align: middle;
-}
-
-.input-block {
-    position: relative;
-    display: inline-block;
-    
-    vertical-align: middle;
-}
-
-.input-text {
-    padding: 5px 5px;
-    
-    background-color: white;
-}
-
-.input-text-sm {
-    height: 30px;
-    display: inline;
-        
-    padding: 2px 20px 2px 5px;
-    font-size: 10pt;
-    
-    background-color: white;
-    border: 1px solid #aaaaaa;
-    border-radius: 3px;
-}
-
-.clear-input:before {
-    content: "×";
-}
-.clear-input {
-    position: absolute;
-    height: 14px;
-    width: 14px;
-    top: 8px;
-    right: 6px;
-
-    display: inline-block;
-    font-style: normal;
-    line-height: 1;
-    text-align: center;
-    font-size: 10pt;
-    font-weight: bold;
-    
-    border: none;
-    color: #aaaaaa;
-    cursor: pointer;
-}
-
-.dynamic-button {
-    position: relative;
-    margin: 0px 3px 0px 3px;
-    padding: 5px 10px 5px 5px;
-    
-    font-size: 10pt;
-    cursor: default;
-    overflow: hidden;
-    border-width: 0px 0px 1px 0px;
-}
-
-.dynamic-button:hover { border-color: #028ac8; background-color: #cecece;}
-
-
-.dynamic-button.selected {
-    font-weight: bold;
-    color: white;
-    border-width: 0px;
-    padding-bottom:6px;
-}
-
-.dynamic-button .group-select-progress {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    
-    height: 100%; 
-    width: 50px;
-    
-    padding: 0;
-    background-color: orange;
-    opacity: 0.5;
-    
-    z-index: 4; 
-}
-
-.dynamic-button .no-data-alert {
-    color: red;
-    font-size: 7pt; 
-}
-
-.info-trigger:before {
-  content: "i";
-}
-.info-trigger {
-    visibility: hidden;
-    
-    position: absolute;
-    right: 15px;
-    
-    height: 15px;
-    width: 15px;
-    
-    display: inline-block;
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    text-align: center;
-    
-    cursor: pointer;
-    color: #028ac8;
-    border-radius: 15px;
-    border: 1px solid #028ac8;
-}
-.info-trigger.triggered {
-    visibility: visible;
 }
 
 .wait-circle {
@@ -500,19 +402,107 @@ div.mousescroll {
     background: linear-gradient(#fe2a31, #cd0108); /* Standard syntax */        
 }
 
-/* particular elements (based on id) */
-#list-selector-container { 
-    text-align: center;
-    border-bottom: 1px solid rgb(178, 178, 178);
-}
-
-#list-selector{
-    margin: 0px 0px; 
-    padding: 3px 5px;
-    text-align: center;
+.input-block {
+    position: relative;
+    display: inline-block;
     vertical-align: middle;
 }
 
-#login-info {
-    display: none;
+.input-text {
+    padding: 5px 5px;
+    background-color: white;
+    
+    border: 1px solid #aaaaaa;
+    border-radius: 3px;
 }
+
+.input-text.input-small {
+    height: 30px;
+    display: inline;
+        
+    padding: 2px 20px 2px 5px;
+    font-size: 10pt;    
+}
+
+.clear-input:before {
+    content: "×";
+}
+.clear-input {
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    top: 8px;
+    right: 6px;
+
+    display: inline-block;
+    font-style: normal;
+    line-height: 1;
+    text-align: center;
+    font-size: 10pt;
+    font-weight: bold;
+    
+    border: none;
+    color: #aaaaaa;
+    cursor: pointer;
+}
+
+/* List manipulation */ 
+
+.dynamic-button {
+    position: relative;
+    margin: 0px 3px;
+    padding: 5px 10px 5px 5px;
+    
+    font-size: 10pt;
+    cursor: default;
+    overflow: hidden;
+    border-width: 0px 0px 1px 0px;
+}
+.dynamic-button:hover { border-color: #028ac8; background-color: #cecece;}
+
+.dynamic-button.selected {
+    font-weight: bold;
+    color: white;
+    border-width: 0px;
+    padding-bottom: 6px;
+}
+
+.dynamic-button .group-select-progress {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    
+    height: 100%; 
+    width: 0;
+    padding: 0;
+    
+    background-color: orange;
+    opacity: 0.5;
+    z-index: 4; 
+}
+
+.dynamic-button .no-data-alert {
+    color: red;
+    font-size: 7pt; 
+}
+
+.info-trigger {
+    position: absolute;
+    right: 15px;
+    
+    height: 15px;
+    width: 15px;
+    
+    display: inline-block;
+    font-weight: normal;
+    line-height: 1;
+    text-align: center;
+    
+    visibility: hidden;
+    cursor: pointer;
+    color: #028ac8;
+    border-radius: 15px;
+    border: 1px solid #028ac8;
+}
+.info-trigger:before { content: "i"; }
+.info-trigger.triggered { visibility: visible; }

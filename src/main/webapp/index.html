@@ -51,7 +51,7 @@
                                 <div class="stl-progress"></div>
                             </div>
                             <div class="dataset-control-panel">
-                                <button id="confirm-delete-btn" class="simple-button to-right fixed-size">Delete selected</button>
+                                <button id="confirm-delete-btn" class="simple-button to-right fixed-size alert">Delete selected</button>
                             </div>
                             <h4 id="login-info"><a>Log in</a> first.</h4>
                         </div>
@@ -60,7 +60,7 @@
                     <div id="dataset-work-panel" class="sliding-panel left-column">
                         <table class="disable-select page-structure">
                             <tr>
-                                <td id="list-selector-container" class="left-column">
+                                <td class="left-column">
                                     <table style="width: 100%;"><tr>
                                         <td style="width: 15%; padding: 4px">
                                             <button data-bind="click: goBack" class="simple-button">
@@ -74,7 +74,7 @@
                                                 <button id="select-groups-btn" class="simple-button list-selector" data-bind="enable: formants().length > 0">Groups</button>
                                                 </div>
                                             </div>
-                                        </td><td style="width: 5%"></td>
+                                        </td>
                                     </tr></table>
                                 </td>
                             </tr>
@@ -83,13 +83,16 @@
                                     <div id="toponyms-list-container" class="list-holder">
                                         <div class="list-control-panel">
                                             <div class="input-block" style="width: 50%" >
-                                                <input class="input-text-sm" data-bind="value: tFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 100%"  />
+                                                <input class="input-text input-small" data-bind="value: tFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 100%"  />
                                                 <span data-bind="click: function(){ tFilter(''); }, visible: tFilter() != ''" class="clear-input"></span>
                                             </div>
-                                            <div class="simple-block">
-                                                <button data-bind="click: function(d,e){ sortListBy($root.toponyms, $root.tsortHeaders[0], $root.tactiveSort);}, text: (tsortHeaders[0].asc() ? tsortHeaders[0].titleasc : tsortHeaders[0].titledes), css:{selected: tactiveSort() === tsortHeaders[0]}" class="simple-button"></button>
-                                            </div>
-                                            <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button">None</button>                                            
+                                            <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button">None</button>
+                                            <button data-bind="click: toggleSortOptions, enable: toponyms().length > 1" class="simple-button">Sort</button>
+                                        </div>
+                                        <div data-bind="visible: sortOptions()" class="list-control-panel extend-control">
+                                            <div data-bind="foreach: tsortHeaders">
+                                                <button data-bind="click: function(d,e){ $root.sortListBy($root.toponyms, $data, $root.tactiveSort);}, html: ( asc() ? titleasc : titledes)" class="small-button"></button>
+                                            </div>                                            
                                         </div>
                                         <div class="nano">
                                             <div id="toponyms-list-content" class="content">
@@ -106,15 +109,17 @@
                                     <div id="groups-list-container" class="list-holder">
                                         <div class="list-control-panel">
                                             <div class="input-block" style="width: 40%" >
-                                                <input class="input-text-sm" data-bind="value: fFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 100%"  />
+                                                <input class="input-text input-small" data-bind="value: fFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 100%"  />
                                                 <span data-bind="click: function(){ fFilter(''); }, visible: fFilter() != ''" class="clear-input"></span>
                                             </div>
-                                            <div class="simple-block">
-                                                <button data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[0], $root.factiveSort);}, text: (fsortHeaders[0].asc() ? fsortHeaders[0].titleasc : fsortHeaders[0].titledes), css:{selected: factiveSort() === fsortHeaders[0]}" class="simple-button"></button><button
-                                                    data-bind="click: function(d,e){ sortListBy($root.formants, $root.fsortHeaders[1], $root.factiveSort);}, text: (fsortHeaders[1].asc() ? fsortHeaders[1].titleasc : fsortHeaders[1].titledes), css:{selected: factiveSort() === fsortHeaders[1]}" class="simple-button"></button>
-                                            </div>
                                             <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button">None</button>
+                                            <button data-bind="click: toggleSortOptions, enable: toponyms().length > 1" class="simple-button">Sort</button>
                                         </div>
+                                        <div data-bind="visible: sortOptions()" class="list-control-panel extend-control">
+                                            <div data-bind="foreach: fsortHeaders">
+                                                <button data-bind="click: function(d,e){ $root.sortListBy($root.formants, $data, $root.factiveSort);}, html: ( asc() ? titleasc : titledes)" class="small-button"></button>
+                                            </div>                                            
+                                        </div>                                        
                                         <div class="nano">
                                             <div class="content">
                                                 <ul id="groups-list" class="list disable-select" data-bind="foreach: formants, selectableList: {onFunc: $root.selectFormant, offFunc: $root.deselectFormant}">

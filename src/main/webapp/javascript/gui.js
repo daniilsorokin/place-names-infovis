@@ -273,6 +273,7 @@ VIZAPP.model = function () {
     
     var Toponym = function(data) {
         this.name = data.name;
+        this.rname = this.name.split("").reverse().join("");
         this.toponymNo = data.toponymNo;
         this.latitude = data.latitude;
         this.longitude = data.longitude;
@@ -294,6 +295,7 @@ VIZAPP.model = function () {
     var Formant = function(data, vm) {
         var self = this;
         self.name = data.formantName;
+        self.rname = self.name.split("").reverse().join("");
         self.formantNo = data.formantNo;
         self.toponymIds = data.toponymIds instanceof Array ? data.toponymIds : [data.toponymIds];
         self.toponyms = vm.getToponymsByFormant(self.formantNo);
@@ -453,9 +455,11 @@ VIZAPP.model = function () {
             $.each(this.toponyms(), function(index, toponym){ toponym.selected(false); });
         };
         
-        self.tsortHeaders = [{titleasc:"a-z", titledes:"z-a", key:"name", asc:ko.observable(true)}];
-        self.fsortHeaders = [{titleasc:"a-z", titledes:"z-a", key:"name", asc:ko.observable(true)}, // formants
-                            {titleasc:"0-9", titledes:"9-0", key:"size", asc:ko.observable(true)}];
+        self.tsortHeaders = [{titleasc:"First letter &#9650;", titledes:"First letter &#9660;", key:"name", asc:ko.observable(true)},
+                             {titleasc:"Last letter &#9650;", titledes:"Last letter &#9660;", key:"rname", asc:ko.observable(true)}];
+        self.fsortHeaders = [{titleasc:"First letter &#9650;", titledes:"First letter &#9660;", key:"name", asc:ko.observable(true)},
+                             {titleasc:"Last letter &#9650;", titledes:"Last letter &#9660;", key:"rname", asc:ko.observable(true)},
+                            {titleasc:"Size &#9650;", titledes:"Size &#9660;", key:"size", asc:ko.observable(true)}];
         self.tactiveSort = ko.observable(self.tsortHeaders[0]);
         self.factiveSort = ko.observable(self.fsortHeaders[0]);
         self.sortListBy = function(list, header, setActiveSort){
@@ -465,6 +469,13 @@ VIZAPP.model = function () {
             });
             setActiveSort(header);
             header.asc(!header.asc());
+            self.sortOptions(false);
+        };
+        
+        self.sortOptions = ko.observable(false);
+        self.toggleSortOptions = function() {
+            self.sortOptions(!self.sortOptions());
+//            $("#toponyms-list-container .extend-control").show("slide", {easing:"easeOutExpo", direction: "up", duration: 200 });
         };
 
         self.sideInfoWindow = ko.observable(null);
@@ -522,6 +533,7 @@ VIZAPP.model = function () {
         self.goBack = function (){
             $("#select-toponyms-btn").trigger("click");
             self.deselectEverything();
+            self.sortOptions(false);
             $("#dataset-select-panel").show();
             $("#dataset-work-panel").hide("slide", { easing:"easeInExpo", direction: "left", duration: 200 });
         };
