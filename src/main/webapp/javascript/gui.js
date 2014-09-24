@@ -342,7 +342,7 @@ VIZAPP.model = function () {
         
         ko.bindingHandlers.selectableList = {
             init: function(element, valueAccessor){
-                $(element).selectable({filter:"li", cancel:".info-trigger"});
+                $(element).selectable({filter:"li", cancel:".info-trigger", distance: 20 });
                 $(element).on( "selectableselected", function( event, ui ) {
                     var item = ko.dataFor(ui.selected);
                     item.selected(true);
@@ -350,6 +350,10 @@ VIZAPP.model = function () {
                 $(element).on( "selectableunselected", function( event, ui ) {
                     var item = ko.dataFor(ui.unselected);
                     item.selected(false);
+                });
+                $(element).on( "dblclick", "li", function(event) {
+                    var item = ko.dataFor(this);
+                    self.toggleInfoWindow(item, event);
                 });
             }
         };
@@ -487,14 +491,8 @@ VIZAPP.model = function () {
         self.sortOptions = ko.observable(false);
         self.toggleSortOptions = function() {
             self.sortOptions(!self.sortOptions());
-//            $("#toponyms-list-container .extend-control").show("slide", {easing:"easeOutExpo", direction: "up", duration: 200 });
         };
         
-        self.mapInfoWindow = ko.observable(null);
-        self.toggleMapInfoWindow = function(infoItem, e){
-            self.mapInfoWindow(infoItem);
-        };
-
         self.sideInfoWindow = ko.observable(null);
         
         self.toggleInfoWindow = function(infoItem, e) {

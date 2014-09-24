@@ -5,7 +5,7 @@
 */
 
 /* elements */
-root { display: block;}
+/*root { display: block;}*/
 html,body{ margin:0; padding:0; height:100%; border:none}
 table {margin: 0px; padding:0px;}
 tr {margin: 0px; padding:0px;}
@@ -23,17 +23,6 @@ table.page-structure {
     overflow: hidden;
     z-index: 3;
     position: absolute;
-}
-
-div.mousescroll {
-    height: 100%; 
-
-    position: relative;
-
-    text-align: center;
-
-    overflow-y: scroll;
-    overflow:-moz-scrollbars-vertical; 
 }
 
 .disable-select {
@@ -118,9 +107,6 @@ div.mousescroll {
     opacity: 1.0;
 }
 
-.control-panel-container {
-}
-
 .list-holder {
     position: absolute;
     height: 100%;
@@ -147,10 +133,6 @@ div.mousescroll {
 .group-badge {
     position: absolute;
     right: 40px;
-}
-
-.element-info-btn {
-    margin: 1px;
 }
 
 .info-window-container .panel {
@@ -214,12 +196,6 @@ div.mousescroll {
     display: block;
 }
 
-
-.control-btn {
-    margin: 3px;
-    padding: 8px 8px;
-}
-
 .wrapper {
     position: relative;
     height: 100%;
@@ -240,16 +216,6 @@ div.mousescroll {
     z-index: 6;
     border-top: 1px solid #a4d3ef;
 }
-
-.control-on-right {
-    float: right;
-}
-
-.control-on-left {
-    float: left;
-    margin: 7px 5px;
-}
-
 
 /* Buttons and Blocks */
 .small-button {
