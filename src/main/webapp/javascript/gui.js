@@ -120,7 +120,8 @@ VIZAPP.myMap = function () {
         zoomControlOptions: {style: google.maps.ZoomControlStyle.SMALL, position: google.maps.ControlPosition.RIGHT_BOTTOM},
         mapTypeId:google.maps.MapTypeId.ROADMAP
     };
-    var infoWindow = new google.maps.InfoWindow();
+    var infoWindow = new google.maps.InfoWindow({maxWidth: 200});
+    var infoIsOn = null;
     var markers = {};
     var polygons = {};
     
@@ -163,6 +164,11 @@ VIZAPP.myMap = function () {
                 google.maps.event.addListener(marker, 'mouseout', function() {
                     $(map.getDiv()).removeAttr("title");
                 });
+                google.maps.event.addListener(marker, 'click', function() {
+                    infoWindow.setContent("<div style='min-width: 100px'>" + toponym.name + "</div>");
+                    infoWindow.open(map,new google.maps.Marker({position:latlng }));
+                    infoIsOn = toponym;
+                });
             }
             markers[toponym.toponymNo].setMap(map);
         },
@@ -180,6 +186,9 @@ VIZAPP.myMap = function () {
         hideMarker: function (toponym) {
             if (markers[toponym.toponymNo]) {
                 markers[toponym.toponymNo].setMap(null);
+            }
+            if(infoIsOn === toponym) {
+                infoWindow.close();
             }
         },
 
@@ -479,6 +488,11 @@ VIZAPP.model = function () {
         self.toggleSortOptions = function() {
             self.sortOptions(!self.sortOptions());
 //            $("#toponyms-list-container .extend-control").show("slide", {easing:"easeOutExpo", direction: "up", duration: 200 });
+        };
+        
+        self.mapInfoWindow = ko.observable(null);
+        self.toggleMapInfoWindow = function(infoItem, e){
+            self.mapInfoWindow(infoItem);
         };
 
         self.sideInfoWindow = ko.observable(null);
