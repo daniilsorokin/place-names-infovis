@@ -100,7 +100,7 @@
                                                     <li data-bind="visible: $root.matchFilter($root.tFilter(), name), focusOnMap: true, showTriggerOnHover: infotriggered(), style:{ background: selected() ? color : 'white'}, css:{'ui-selected selected': selected()}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="visible: !latitude" class="no-data-alert">No location</span>
-                                                        <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger"></span>
+                                                        <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger to-right"></span>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -125,7 +125,7 @@
                                                 <ul id="groups-list" class="list disable-select" data-bind="foreach: formants, selectableList: {onFunc: $root.selectFormant, offFunc: $root.deselectFormant}">
                                                     <li data-bind="visible: $root.matchFilter($root.fFilter(), name), showGroupOnMap: selectedTops() === size, showTriggerOnHover:  infotriggered(), style:{ background: selectedTops() === size ? color : 'white'}, css:{'ui-selected selected': selectedTops() === size}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
-                                                        <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger"></span>
+                                                        <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger to-right"></span>
                                                         <span class="group-badge">
                                                             <span data-bind="text: selectedTops() + ' /', visible: selectedTops() > 0" class="small"></span> 
                                                             <span data-bind="text: size" class="small"></span>
@@ -160,7 +160,7 @@
                                     <dd data-bind="text: type"></dd><!-- /ko -->
                                     <!-- ko if: $data.formantName --><dt>Group</dt>
                                     <dd><span data-bind="text: formantName"></span>
-                                        <span class="toponym-element">i</span>
+                                        <span data-bind="click: function(d,e) { $root.toggleInfoWindow(formant, e); }" class="info-trigger"></span>
                                     </dd><!-- /ko -->
                                     <!-- ko if: $data.size --><dt>Size</dt>
                                     <dd data-bind="text: size"></dd><!-- /ko -->

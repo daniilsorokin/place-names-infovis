@@ -487,9 +487,6 @@ div.mousescroll {
 }
 
 .info-trigger {
-    position: absolute;
-    right: 15px;
-    
     height: 15px;
     width: 15px;
     
@@ -498,11 +495,11 @@ div.mousescroll {
     line-height: 1;
     text-align: center;
     
-    visibility: hidden;
     cursor: pointer;
     color: #028ac8;
     border-radius: 15px;
     border: 1px solid #028ac8;
 }
+.info-trigger.to-right { position: absolute; right: 15px;}
 .info-trigger:before { content: "i"; }
-.info-trigger.triggered { visibility: visible; }
+.info-trigger.triggered { visibility: visible;}

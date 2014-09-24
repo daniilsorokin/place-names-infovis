@@ -281,6 +281,7 @@ VIZAPP.model = function () {
         this.type = data.type !== undefined ? data.type.name : null;
         this.formantName = data.formant !== undefined ? data.formant.formantName : null;
         this.formantNo = data.formant !== undefined ? data.formant.formantNo : null;
+        this.formant = null;
         this.othernames = data.englishTransliteration;
         /* default color */
         this.color = "#0066CC";
@@ -304,6 +305,7 @@ VIZAPP.model = function () {
         self.color = colorGenerator.generateNextColor();
         $.each(self.toponyms, function(index, toponym){
             toponym.color = self.color;
+            toponym.formant = self;
         });
 
         self.selectedTops = ko.computed(function(){
@@ -350,7 +352,8 @@ VIZAPP.model = function () {
             update: function(element, valueAccessor){
                 if(!valueAccessor()) 
                     $(".info-trigger",  $(element)).fadeTo(200, 0, function(){ $(this).css({visibility: 'hidden', opacity: 1}); }); 
-
+                else
+                    $(".info-trigger",  $(element)).css('visibility', 'visible');
             }
         };
         ko.bindingHandlers.turnHalfCircle = {
