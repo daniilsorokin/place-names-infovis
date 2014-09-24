@@ -342,7 +342,11 @@ VIZAPP.model = function () {
         
         ko.bindingHandlers.selectableList = {
             init: function(element, valueAccessor){
-                $(element).selectable({filter:"li", cancel:".info-trigger", distance: 20 });
+                $(element).selectable({
+                    filter:"li", 
+                    cancel:".info-trigger", 
+//                    distance: 20 
+                });
                 $(element).on( "selectableselected", function( event, ui ) {
                     var item = ko.dataFor(ui.selected);
                     item.selected(true);
@@ -351,19 +355,19 @@ VIZAPP.model = function () {
                     var item = ko.dataFor(ui.unselected);
                     item.selected(false);
                 });
-                $(element).on( "dblclick", "li", function(event) {
-                    var item = ko.dataFor(this);
-                    self.toggleInfoWindow(item, event);
-                });
-                $(element).on( "click", "li", function(event) {
-                    if(event.ctrlKey) {
-                        var item = ko.dataFor(this);
-                        item.selected(!item.selected());
-                    } else {
-                        $("li.selected", element).each(function(){ko.dataFor(this).selected(false);});
-                        ko.dataFor(this).selected(true);
-                    }
-                });
+//                $(element).on( "dblclick", "li", function(event) {
+//                    var item = ko.dataFor(this);
+//                    self.toggleInfoWindow(item, event);
+//                });
+//                $(element).on( "click", "li", function(event) {
+//                    if(event.ctrlKey) {
+//                        var item = ko.dataFor(this);
+//                        item.selected(!item.selected());
+//                    } else {
+//                        $("li.selected", element).each(function(){ko.dataFor(this).selected(false);});
+//                        ko.dataFor(this).selected(true);
+//                    }
+//                });
             }
         };
         ko.bindingHandlers.showTriggerOnHover = {
