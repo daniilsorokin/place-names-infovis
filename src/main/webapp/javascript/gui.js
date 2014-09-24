@@ -471,7 +471,7 @@ VIZAPP.model = function () {
                              {titleasc:"Last letter &#9650;", titledes:"Last letter &#9660;", key:"rname", asc:ko.observable(true)}];
         self.fsortHeaders = [{titleasc:"First letter &#9650;", titledes:"First letter &#9660;", key:"name", asc:ko.observable(true)},
                              {titleasc:"Last letter &#9650;", titledes:"Last letter &#9660;", key:"rname", asc:ko.observable(true)},
-                            {titleasc:"Size &#9650;", titledes:"Size &#9660;", key:"size", asc:ko.observable(true)}];
+                            {titleasc:"Size &#9650;", titledes:"Size &#9660;", key:"size", asc:ko.observable(false)}];
         self.tactiveSort = ko.observable(self.tsortHeaders[0]);
         self.factiveSort = ko.observable(self.fsortHeaders[0]);
         self.sortListBy = function(list, header, setActiveSort){
@@ -665,10 +665,12 @@ VIZAPP.gui = function () {
 
             
             $("#upload-dataset-btn").click(function(){
+                $("#dataset-select-panel button").attr("disabled", "disabled");
                 $("#load-file-modal").show("drop", {easing:"easeOutExpo", direction: "up", duration: 400 });
             }); 
             
             $("#cancel-button").click(function(){
+                $("#dataset-select-panel button").removeAttr("disabled");
                 $("#load-file-modal").hide("drop", {easing:"easeInExpo", direction: "up", duration: 200 });
             });
             
@@ -730,6 +732,7 @@ VIZAPP.gui = function () {
                     .show("slide", {easing:"easeOutExpo", direction: "left", duration: 400 });
                         
             if(VIZAPP.isLoginRequired){
+                $("#delete-dataset-btn").attr("disabled", "disabled");
                 $.ajax({
                     url: "request/storage/get-user/",
                     type: 'GET',
