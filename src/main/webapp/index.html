@@ -36,8 +36,8 @@
                         <div class="wrapper">
                             <h3>Select a dataset</h3>
                             <div class="dataset-control-panel">
-                                <button id="upload-dataset-btn" class="small-button">+</button>
-                                <button id="delete-dataset-btn" class="small-button">-</button>
+                                <button id="upload-dataset-btn" class="small-button" title="Upload new dataset">+</button>
+                                <button id="delete-dataset-btn" class="small-button" title="Delete dataset">-</button>
                             </div>
                             <div id="dataset-btn-list" data-bind="foreach: datasets">
                                 <button data-bind="click: $root.clickDataset" class="simple-button dataset-btn">
@@ -63,15 +63,15 @@
                                 <td class="left-column">
                                     <table style="width: 100%;"><tr>
                                         <td style="width: 15%; padding: 4px">
-                                            <button data-bind="click: goBack" class="simple-button">
+                                            <button data-bind="click: goBack" class="simple-button" title="Go back to the dataset list">
                                                 <span class="glyphicon glyphicon-chevron-left"></span>
                                             </button>
                                         </td><td style="width: 85%; text-align: center; padding: 4px">
                                             <div id="list-selector" class="simple-block-justified simple-block">
                                                 <div class="simple-block">
-                                                <button id="select-toponyms-btn" class="simple-button list-selector selected" data-bind="enable: toponyms().length > 0">Toponyms</button>
+                                                <button title="Show toponym list" id="select-toponyms-btn" class="simple-button list-selector selected" data-bind="enable: toponyms().length > 0">Toponyms</button>
                                                 </div><div class="simple-block">
-                                                <button id="select-groups-btn" class="simple-button list-selector" data-bind="enable: formants().length > 0">Groups</button>
+                                                <button title="Show group list" id="select-groups-btn" class="simple-button list-selector" data-bind="enable: formants().length > 0">Groups</button>
                                                 </div>
                                             </div>
                                         </td>
@@ -83,12 +83,12 @@
                                     <div id="toponyms-list-container" class="list-holder">
                                         <div class="list-control-panel">
                                             <div class="input-block">
-                                                <input class="input-text input-small" data-bind="value: tFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 95%"  />
+                                                <input class="input-text input-small" data-bind="value: tFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 95%" title="Type here to search" />
                                                 <span data-bind="click: function(){ tFilter(''); }, visible: tFilter() != ''" class="clear-input"></span>
                                             </div>
                                             <div style="width: 40%">
-                                                <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button">None</button>
-                                                <button data-bind="click: toggleSortOptions, enable: toponyms().length > 1" class="simple-button">Sort</button>
+                                                <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button" title="Deselect all">None</button>
+                                                <button data-bind="click: toggleSortOptions, enable: toponyms().length > 1" class="simple-button" title="Show sort options">Sort</button>
                                             </div>
                                         </div>
                                         <div data-bind="visible: sortOptions()" class="list-control-panel extend-control">
@@ -111,12 +111,12 @@
                                     <div id="groups-list-container" class="list-holder">
                                         <div class="list-control-panel">
                                             <div class="input-block">
-                                                <input class="input-text input-small" data-bind="value: fFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 95%"/>
+                                                <input class="input-text input-small" data-bind="value: fFilter, valueUpdate: 'afterkeydown'" type="text" placeholder="Search" style="width: 95%"  title="Type here to search"/>
                                                 <span data-bind="click: function(){ fFilter(''); }, visible: fFilter() != ''" class="clear-input"></span>
                                             </div>
                                             <div style="width: 40%">
-                                                <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button">None</button>
-                                                <button data-bind="click: toggleSortOptions, enable: toponyms().length > 1" class="simple-button">Sort</button>
+                                                <button data-bind="click: deselectEverything, enable: toponyms().length > 1" class="simple-button" title="Deselect all">None</button>
+                                                <button data-bind="click: toggleSortOptions, enable: toponyms().length > 1" class="simple-button" title="Show sort options">Sort</button>
                                             </div>
                                         </div>
                                         <div data-bind="visible: sortOptions()" class="list-control-panel extend-control">
@@ -184,7 +184,7 @@
             </tr>  
         </table>
         <div id="load-file-modal" class="full-alert">
-            <div id="data-type-options" class="simple-block-justified simple-block">
+            <div id="data-type-options" class="simple-block-justified simple-block" title="Select the type of your file">
                 <div class="simple-block">
                     <button id="csv-button" class="simple-button selected">CSV</button>
                 </div>
@@ -192,8 +192,8 @@
                     <button id="tsv-button" class="simple-button">TSV</button>
                 </div>
             </div>
-            <div id="select-dataset-file" class="select-area">
-                <span>Select file</span>
+            <div id="select-dataset-file" class="select-area" title="Click here to select a file">
+                <span>Select a file</span>
             </div>
             <div>
                 <input id="dataset-file" name="dataset-file" type="file" style="display:none" />
