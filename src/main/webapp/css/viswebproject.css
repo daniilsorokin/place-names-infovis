@@ -339,7 +339,7 @@ div.mousescroll {
 /* Modal area and Input */
 .full-alert {
     width: 400px !important;
-    height: 250px !important;
+    height: 270px !important;
     
     position: absolute;
     top: 20%;
@@ -449,6 +449,26 @@ div.mousescroll {
     
     border: none;
     color: #aaaaaa;
+    cursor: pointer;
+}
+
+.example-table {
+    border: 1px solid #aaaaaa;
+    font-size: 10pt;
+    background-color: white;
+}
+.example-table *{
+    border: 1px solid #aaaaaa;
+    padding: 4px;
+}
+
+.small-info-area {
+    text-align: right;
+    margin: 4px;
+}
+.info-link {
+    color: #1d9efe;
+    text-decoration: underline;
     cursor: pointer;
 }
 

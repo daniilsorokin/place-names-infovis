@@ -193,7 +193,10 @@
                 </div>
             </div>
             <div id="select-dataset-file" class="select-area" title="Click here to select a file">
-                <span>Select a file</span>
+                <span>Select a file</span>                
+            </div>
+            <div class="small-info-area">
+                <span id="about-format-link" class="info-link">About file format</span>
             </div>
             <div>
                 <input id="dataset-file" name="dataset-file" type="file" style="display:none" />
@@ -202,6 +205,29 @@
             <div style="margin-top: 15px;">
                 <button id="load-button" class="simple-button" style="width:40%; color: #0066CC">Load</button>
                 <button id="cancel-button" class="simple-button" style="width:40%;">Cancel</button>
+            </div>
+            
+        </div>
+        <div id="file-info-modal" class="full-alert">
+            <p>Your file should contain a table, with the following structure:</p>
+            <table class="example-table">
+                <tr>
+                    <td> Toponym's name </td>
+                    <td> Latitude </td>
+                    <td> Longitude </td>
+                    <td> Group's name </td>
+                    <td> Typo of the object (optional) </td>
+                </tr>
+                <tr>
+                    <td> Tübingen </td>
+                    <td> 48.52 </td>
+                    <td> 9.055556 </td>
+                    <td> ingen </td>
+                    <td> Town </td>
+                </tr>
+            </table>
+            <div style="margin-top: 15px;">
+                <button class="simple-button" style="width:40%;">OK</button>
             </div>
         </div>
     </body>

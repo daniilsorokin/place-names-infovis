@@ -675,8 +675,16 @@ VIZAPP.gui = function () {
             });
             
             $("#load-file-modal").hide();
+            $("#file-info-modal").hide();
             $("#load-progress").hide();
             $("#confirm-delete-btn").hide();
+            
+            $("#about-format-link").click(function(){
+                $("#file-info-modal").show("drop", {easing:"easeOutExpo", direction: "down", duration: 100 });
+            });
+            $("#file-info-modal button").click(function(){
+                $("#file-info-modal").hide("drop", {easing:"easeInExpo", direction: "down", duration: 100 });
+            });
            
             $("#load-button").click(function(){
                 var selectedFile = $("#dataset-file")[0].files[0];
