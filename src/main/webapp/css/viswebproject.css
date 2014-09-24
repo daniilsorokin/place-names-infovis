@@ -66,10 +66,6 @@ div.mousescroll {
     position: relative;
 }
 
-
-.list .ui-selecting { border-color: #0066CC; }
-.list .ui-selected { background: #0066CC; color: white; }
-
 .list-container {
      height: 100%;
      position: relative;
@@ -80,21 +76,27 @@ div.mousescroll {
     width: 100%;
     padding: 4px;
 
-    text-align: left;
-    vertical-align: middle;
-    display: table-cell;
+    display: table;
     
     border-bottom: 1px solid #cecece;
+}
+.list-control-panel div {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
 }
 
 .list-control-panel.extend-control {
     position: absolute;
     top: 41px;
     height: 40px !important;
-    padding: 6px;
     
     z-index: 6;
     background-color: white;
+}
+.list-control-panel.extend-control div {
+    padding: 6px;
+    text-align: left;
 }
 
 .dataset-control-panel {
@@ -288,6 +290,10 @@ div.mousescroll {
     color: white;
     background-color: #00afff;
 }
+.small-button.pointed:before {
+    content: "\26AB ";
+    color: #00afff;
+}
 .simple-button.selected {
     font-weight: bold;
     color: white;
@@ -450,20 +456,24 @@ div.mousescroll {
 
 .dynamic-button {
     position: relative;
-    margin: 0px 3px;
+    margin: 0px 3px 0px 0px;
     padding: 5px 10px 5px 5px;
     
     font-size: 10pt;
     cursor: default;
     overflow: hidden;
-    border-width: 0px 0px 1px 0px;
+    
+    border-style: solid;
+    border-width: 0px 0px 1px 3px;
+    border-bottom-color: #aaaaaa;
+    border-left-color: white; 
 }
-.dynamic-button:hover { border-color: #028ac8; background-color: #cecece;}
-
+.dynamic-button:hover { border-left-color: #a4d3ef; }
+.dynamic-button.ui-selecting { border-left-color: #a4d3ef; }
 .dynamic-button.selected {
     font-weight: bold;
     color: white;
-    border-width: 0px;
+    border-bottom-width: 0px;
     padding-bottom: 6px;
 }
 
