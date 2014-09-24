@@ -355,6 +355,15 @@ VIZAPP.model = function () {
                     var item = ko.dataFor(this);
                     self.toggleInfoWindow(item, event);
                 });
+                $(element).on( "click", "li", function(event) {
+                    if(event.ctrlKey) {
+                        var item = ko.dataFor(this);
+                        item.selected(!item.selected());
+                    } else {
+                        $("li.selected", element).each(function(){ko.dataFor(this).selected(false);});
+                        ko.dataFor(this).selected(true);
+                    }
+                });
             }
         };
         ko.bindingHandlers.showTriggerOnHover = {
