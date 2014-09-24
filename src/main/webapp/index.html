@@ -3,6 +3,11 @@
     <head>
         <title>Toponyms InfoVis Project</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="vendor/jquery-ui/jquery-ui.min.css" />
+        <link rel="stylesheet" href="vendor/nanoscroller/nanoscroller.css" />
+        <link rel="stylesheet" href="css/viswebproject.css" />
+
         <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyCu0d6lpgFSzznwCppY2HEoca4y1AM0Cow&v=3.exp&sensor=false&libraries=geometry"></script>
         <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
@@ -16,17 +21,6 @@
         <script type="text/javascript" src="javascript/main.js"></script>
         <script type="text/javascript" src="javascript/colors.js"></script>
         <script type="text/javascript" src="javascript/gui.js"></script>
-        
-        <script type="text/javascript">
-            $( document ).ready( function() {
-                VIZAPP.initialize();
-            });
-        </script>
-        
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="vendor/jquery-ui/jquery-ui.min.css" />
-        <link rel="stylesheet" href="vendor/nanoscroller/nanoscroller.css" />
-        <link rel="stylesheet" href="css/viswebproject.css" />
     </head>
     <body>
         <table id="page-structure" class="page-structure disable-select">
@@ -105,7 +99,7 @@
                                                     <li data-bind="visible: $root.matchFilter($root.tFilter(), name), focusOnMap: true, showTriggerOnHover: infotriggered(), style:{ background: selected() ? color : null}, css:{'ui-selected selected': selected()}" class="dynamic-button">
                                                         <span data-bind="text: name" class="name"></span>
                                                         <span data-bind="visible: !latitude" class="no-data-alert">No location</span>
-                                                        <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger to-right"></span>
+                                                        <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger to-right" title="Show info (double click to do the same)"></span>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -132,7 +126,7 @@
                                                 <ul id="groups-list" class="list disable-select" data-bind="foreach: formants, selectableList: {onFunc: $root.selectFormant, offFunc: $root.deselectFormant}">
                                                     <li data-bind="visible: $root.matchFilter($root.fFilter(), name), showGroupOnMap: selectedTops() === size, showTriggerOnHover:  infotriggered(), style:{ background: selectedTops() === size ? color : 'white'}, css:{'ui-selected selected': selectedTops() === size}" class="dynamic-button ui-widget-content">
                                                         <span data-bind="text: name" class="name"></span>
-                                                        <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger to-right"></span>
+                                                        <span data-bind="click: $root.toggleInfoWindow, css: {triggered: infotriggered()}" class="info-trigger to-right" title="Show info (double click to do the same)"></span>
                                                         <span class="group-badge">
                                                             <span data-bind="text: selectedTops() + ' /', visible: selectedTops() > 0" class="small"></span> 
                                                             <span data-bind="text: size" class="small"></span>
