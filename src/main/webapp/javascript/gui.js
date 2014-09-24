@@ -677,13 +677,20 @@ VIZAPP.gui = function () {
             $("#load-file-modal").hide();
             $("#file-info-modal").hide();
             $("#load-progress").hide();
+            $("#developer-info").hide();
             $("#confirm-delete-btn").hide();
             
+            $("#developers-info-link").click(function(){
+                $("#developer-info").show("drop", {easing:"easeOutExpo", direction: "down", duration: 400 });
+            });
+            $("#developer-info button").click(function(){
+                $("#developer-info").hide("drop", {easing:"easeInExpo", direction: "down", duration: 200 });
+            });
             $("#about-format-link").click(function(){
-                $("#file-info-modal").show("drop", {easing:"easeOutExpo", direction: "down", duration: 100 });
+                $("#file-info-modal").show("drop", {easing:"easeOutExpo", direction: "down", duration: 200 });
             });
             $("#file-info-modal button").click(function(){
-                $("#file-info-modal").hide("drop", {easing:"easeInExpo", direction: "down", duration: 100 });
+                $("#file-info-modal").hide("drop", {easing:"easeInExpo", direction: "down", duration: 200 });
             });
            
             $("#load-button").click(function(){
@@ -740,16 +747,16 @@ VIZAPP.gui = function () {
                     .show("slide", {easing:"easeOutExpo", direction: "left", duration: 400 });
                         
             if(VIZAPP.isLoginRequired){
-                $("#delete-dataset-btn").attr("disabled", "disabled");
+                $("#delete-dataset-btn").hide();
                 $.ajax({
                     url: "request/storage/get-user/",
                     type: 'GET',
                     success: function(answer){
-                        $("#dataset-select-panel .footer").show();
+                        $("#dataset-select-panel .footer h5").show();
                         if(answer) {
                             $("#login-info").hide();
-                            $("#dataset-select-panel .footer h4").html(answer);
-                            $("#delete-dataset-btn").removeAttr("disabled");
+                            $("#dataset-select-panel .footer h5 span").html(answer);
+//                            $("#delete-dataset-btn").removeAttr("disabled");
                             $("#upload-dataset-btn").removeAttr("disabled");
                         } else {
                             $("#login-info").show();

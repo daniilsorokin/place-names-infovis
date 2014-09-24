@@ -226,18 +226,18 @@ div.mousescroll {
     
     margin: 0 auto 0;
     padding: 0 30px;
-        
+        z-index: 5;
     text-align: center;
 }
 
 .footer {
-    display: none;
-    
-    height: 75px;
-    margin-top: -75px;
+    /*display: none;*/
+    position: relative;
+    height: 90px;
+    top: -90px;
     
     padding: 5px;
-    
+    z-index: 6;
     border-top: 1px solid #a4d3ef;
 }
 
